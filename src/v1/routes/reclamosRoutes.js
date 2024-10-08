@@ -1,5 +1,5 @@
 import express from 'express';
-import { getEstadoReclamo } from '../controllers/reclamosController.js';
+import { getEstadoReclamo } from '../../controllers/reclamosController.js';
 
 const router = express.Router();
 

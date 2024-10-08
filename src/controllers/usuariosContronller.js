@@ -81,8 +81,80 @@ const getPaginatedUsuarios = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener los usuarios' });
   }
 };
+
+//Actualizar un usuario
+const updateUsuario = async (req, res) => {
+  const { idUsuario } = req.params; // Obtener el ID del usuario desde los parámetros
+  console.log(`ID del usuario a actualizar: ${idUsuario}`);
+  const { nombre, apellido, correoElectronico, contrasenia, idTipoUsuario, imagen } = req.body;
+
+  // Validaciones opcionales para campos que deseas asegurarte que no sean nulos o vacíos.
+  const errores = validarUsuario(req.body); // Puedes ajustar esto según cómo manejes la validación
+  if (errores.length > 0) {
+    return res.status(400).json({ errores });
+  }
+
+  // Construir la consulta de actualización
+  const updates = [];
+  const values = [];
+
+  if (nombre) {
+    updates.push('nombre = ?');
+    values.push(nombre);
+  }
+  if (apellido) {
+    updates.push('apellido = ?');
+    values.push(apellido);
+  }
+  if (correoElectronico) {
+    updates.push('correoElectronico = ?');
+    values.push(correoElectronico);
+  }
+  if (contrasenia) {
+    updates.push('contrasenia = ?');
+    values.push(contrasenia);
+  }
+  if (idTipoUsuario) {
+    updates.push('idTipoUsuario = ?');
+    values.push(idTipoUsuario);
+  }
+  if (imagen) {
+    updates.push('imagen = ?');
+    values.push(imagen);
+  }
+
+  // Si no hay campos para actualizar
+  if (updates.length === 0) {
+    return res.status(400).json({ mensaje: 'No se proporcionaron campos para actualizar.' });
+  }
+
+  // Agregar el ID del usuario al final de los valores
+  values.push(idUsuario);
+
+  try {
+    const query = `
+      UPDATE usuarios 
+      SET ${updates.join(', ')}
+      WHERE idUsuario = ?
+    `;
+
+    const [result] = await conexion.query(query, values);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ mensaje: 'Usuario actualizado con éxito' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al actualizar el usuario' });
+  }
+};
+
+
 export default {
   createUsuario,
   getAllUsuarios,
   getPaginatedUsuarios,
+  updateUsuario,
 };

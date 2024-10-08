@@ -2,8 +2,8 @@ import express from "express";
 import dotenv from 'dotenv';
 import { sendEmail } from './services/emailController.js'; // Importa la función
 import { conexion } from "./db/conexion.js";
-import reclamosRouter from './routes/reclamosRoutes.js'; // Importa tus rutas
-import usuarioRoutes from './routes/usuariosRoutes.js'; // Importar las rutas de usuario
+import reclamosRouter from './v1/routes/reclamosRoutes.js'; // Importa tus rutas
+import usuarioRoutes from './v1/routes/usuariosRoutes.js'; // Importar las rutas de usuario
 //Lee las variables de entorno.
 dotenv.config();
 const app=express();        
@@ -11,6 +11,8 @@ const app=express();
 
 app.use(express.json());
 app.use(reclamosRouter);    
+
+
 // Usar las rutas de usuarios
 app.use('/api', usuarioRoutes); // Prefijo /api para las rutas de usuario
 
