@@ -8,4 +8,7 @@ const router = express.Router(); // Crear una instancia del router
 router.post('/usuarios', usuariosController.createUsuario); // Usar el método del controlador
 // obtener todos los usuarios
 router.get('/usuarios', usuariosController.getAllUsuarios);
+// Ruta para obtener usuarios con paginación
+router.get('/usuarios/paginated', usuariosController.getPaginatedUsuarios);
+
 export default router; // Exportar las rutas

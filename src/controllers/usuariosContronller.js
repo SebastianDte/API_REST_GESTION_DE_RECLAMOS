@@ -1,6 +1,7 @@
 // src/controllers/usuariosController.js
 import { conexion } from '../db/conexion.js'; // Importamos la conexión a la base de datos
 import { validarUsuario,validarCorreoExistente } from '../utils/validaciones.js';
+import {paginarResultados} from '../utils/paginacion.js'
 
 const createUsuario = async (req, res) => {
   const {
@@ -49,8 +50,39 @@ const getAllUsuarios = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener los usuarios' });
   }
 };
+// Obtener usuarios con paginación
+const getPaginatedUsuarios = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Obtener el número de página
+  const pageSize = parseInt(req.query.pageSize) || 10; // Obtener el tamaño de la página
 
+  const queryBase = `
+    SELECT 
+      usuarios.idUsuario, 
+      usuarios.nombre, 
+      usuarios.apellido, 
+      usuarios.correoElectronico, 
+      usuarios.contrasenia, 
+      tipos.descripcion AS tipoUsuario, 
+      usuarios.imagen, 
+      usuarios.activo 
+    FROM 
+      usuarios 
+    JOIN 
+      usuariosTipo AS tipos 
+    ON 
+      usuarios.idTipoUsuario = tipos.idUsuarioTipo
+  `;
+
+  try {
+    const paginatedResult = await paginarResultados(queryBase, page, pageSize, conexion);
+    res.status(200).json(paginatedResult);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al obtener los usuarios' });
+  }
+};
 export default {
   createUsuario,
   getAllUsuarios,
+  getPaginatedUsuarios,
 };
