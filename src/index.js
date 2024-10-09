@@ -1,21 +1,19 @@
 import express from "express";
 import dotenv from 'dotenv';
 import { sendEmail } from './services/emailController.js'; // Importa la función
-import { conexion } from "./db/conexion.js";
-import reclamosRouter from './v1/routes/reclamosRoutes.js'; // Importa tus rutas
-import usuarioRoutes from './v1/routes/usuariosRoutes.js'; // Importar las rutas de usuario
-//Lee las variables de entorno.
+import v1Routes from './v1/index.js';
+
+//No tocar !!!
 dotenv.config();
 const app=express();        
-
-
 app.use(express.json());
-app.use(reclamosRouter);    
 
 
-// Usar las rutas de usuarios
-app.use('/api', usuarioRoutes); // Prefijo /api para las rutas de usuario
 
+// Prefijo para la versión v1
+app.use('/api/v1', v1Routes);  // Usa las rutas de la carpeta v1 con el prefijo /api/v1
+
+//Envio de correo - NO VA ACÁ, PERO ANDA, LUEGO LO ORDENO.
 app.post('/notificacion', async (req, res) => {
     console.log("Ruta /notificacion alcanzada");
     // Es quien va a recibir el correo, a donde se va a mandar se toma del cuerpo del json.
@@ -32,7 +30,7 @@ app.post('/notificacion', async (req, res) => {
 });
 
 
-//Variable de entorno Puerto, para ver que esta escuchando en el puerto que configuramos en las variables de entorno.
+// Configuración del puerto
 const puerto = process.env.PUERTO;
 app.listen(puerto,() =>{
     console.log(`estoy escuchando en ${puerto}`);

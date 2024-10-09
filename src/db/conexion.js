@@ -1,13 +1,17 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Cargar las variables de entorno
+//Esto es para cargar las variables de entorno.
+dotenv.config();
 
-// Crear función para la conexión a la DB
+// Creo la función para conexión a la database.
+//No creo usuario ni contraseña, para facilitar la configuración al ejecutar el proyecto en distintas maquinas,
+//Como trabajamos de forma local, utilizando la configuración estandar no hay problemas para nadie.
+
 export const conexion = await mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost', 
-    user: process.env.DB_USER || 'root', 
-    password: process.env.DB_PASSWORD || '', 
+    host: process.env.DB_HOST || 'localhost',  //Estoy trabajando de forma local
+    user: process.env.DB_USER || 'root',  //Usuario ROOT por defecto.
+    password: process.env.DB_PASSWORD || '',  //Sin contraseña
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT // Si no lo especificas, usa el puerto por defecto
+    port: process.env.DB_PORT 
 });

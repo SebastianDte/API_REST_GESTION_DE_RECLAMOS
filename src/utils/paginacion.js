@@ -1,9 +1,7 @@
-// utils/paginacion.js
-
 export const paginarResultados = async (queryBase, page = 1, pageSize = 10, conexion) => {
   const offset = (page - 1) * pageSize;
   
-  // Contar el total de resultados
+  // cuenta  el total de resultados
   const totalQuery = `SELECT COUNT(*) as total FROM (${queryBase}) AS totalCount`;
   const [[{ total }]] = await conexion.query(totalQuery);
 

@@ -2,15 +2,21 @@
 import express from 'express'; // Importar Express
 import usuariosController from '../../controllers/usuariosContronller.js'; // Importar el controlador de usuarios
 
-const router = express.Router(); // Crear una instancia del router
+const router = express.Router(); 
 
-// Definir la ruta para crear un usuario
-router.post('/usuarios', usuariosController.createUsuario); // Usar el método del controlador
+// Ruta para crear un usuario.
+router.post('/usuarios', usuariosController.createUsuario); 
 // obtener todos los usuarios
 router.get('/usuarios', usuariosController.getAllUsuarios);
+// Ruta para obtener un usuario por ID
+router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
 // Ruta para obtener usuarios con paginación
 router.get('/usuarios/paginated', usuariosController.getPaginatedUsuarios);
 // Ruta para actualizar un usuario
 router.patch('/usuarios/:idUsuario', usuariosController.updateUsuario);
+// Ruta para eliminar un usuario | BAJA LÓGICA.
+router.delete('/usuarios/:idUsuario', usuariosController.deleteUsuario);
+// Ruta para reactivar un usuario
+router.patch('/usuarios/alta/:idUsuario', usuariosController.reactivarUsuario);
 
-export default router; // Exportar las rutas
+export default router; 
