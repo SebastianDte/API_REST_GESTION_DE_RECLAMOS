@@ -68,38 +68,49 @@ const getAllReclamos = async (req, res) => {
     }
 };
 
-// Lógica para obtener un reclamo por ID
 const getReclamoPorId = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; // Obtener el ID de los parámetros de la solicitud
+
+    // Verificar que id sea un número válido
+    const reclamoId = parseInt(id);
+    if (isNaN(reclamoId)) {
+        return res.status(400).json({ mensaje: 'ID inválido' });
+    }
 
     try {
+        // Realizar la consulta a la base de datos
         const [rows] = await conexion.query(
             `SELECT 
-                reclamos.idReclamo, 
-                reclamos.descripcion, 
-                reclamos.fechaCreacion, 
-                reclamos.estado, 
-                usuarios.nombre AS usuario
+                r.idReclamo, 
+                r.descripcion, 
+                r.fechaCreado, 
+                re.descripcion AS estado, 
+                u.nombre AS usuarioCreador,
+                u.apellido AS apellidoCreador
              FROM 
-                reclamos 
+                reclamos AS r
              JOIN 
-                usuarios ON reclamos.idUsuario = usuarios.idUsuario 
+                usuarios AS u ON r.idUsuarioCreador = u.idUsuario
+             JOIN 
+                reclamosEstado AS re ON r.idReclamoEstado = re.idReclamoEstado
              WHERE 
-                reclamos.idReclamo = ?`, 
-            [id]
+                r.idReclamo = ?`, 
+            [reclamoId] // Pasar el ID como parámetro
         );
 
+        // Comprobar si se encontró algún reclamo
         if (rows.length === 0) {
             return res.status(404).json({ mensaje: 'Reclamo no encontrado' });
         }
 
+        // Enviar la respuesta con los datos del reclamo
         res.status(200).json(rows[0]);
     } catch (error) {
-        console.error(error);
+        // Manejo de errores
+        console.error('Error en la consulta:', error);
         res.status(500).json({ mensaje: 'Error al obtener el reclamo' });
     }
 };
-
 // Lógica para modificar un reclamo
 const updateReclamo = async (req, res) => {
     const { idReclamo } = req.params; 
