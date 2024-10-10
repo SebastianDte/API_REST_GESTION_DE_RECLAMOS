@@ -1,6 +1,6 @@
 // src/routes/usuarioRoutes.js
 import express from 'express'; // Importar Express
-import usuariosController from '../../controllers/usuariosContronller.js'; // Importar el controlador de usuarios
+import usuariosController from '../../controllers/usuariosController.js'; // Importar el controlador de usuarios
 
 const router = express.Router(); 
 

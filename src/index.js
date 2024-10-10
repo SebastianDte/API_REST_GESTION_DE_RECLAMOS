@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from 'dotenv';
-import { sendEmail } from './services/emailController.js'; // Importa la función
+import { sendEmail } from './services/emailController.js';
 import v1Routes from './v1/index.js';
 
 //No tocar !!!
@@ -9,9 +9,8 @@ const app=express();
 app.use(express.json());
 
 
-
-// Prefijo para la versión v1
-app.use('/api/v1', v1Routes);  // Usa las rutas de la carpeta v1 con el prefijo /api/v1
+// Usa las rutas de la carpeta v1 con el prefijo /api/v1
+app.use('/api/v1', v1Routes);  
 
 //Envio de correo - NO VA ACÁ, PERO ANDA, LUEGO LO ORDENO.
 app.post('/notificacion', async (req, res) => {
@@ -28,7 +27,6 @@ app.post('/notificacion', async (req, res) => {
         res.status(400).send({ error: error.message }); // Respuesta de error al cliente
     }
 });
-
 
 // Configuración del puerto
 const puerto = process.env.PUERTO;

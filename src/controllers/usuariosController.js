@@ -1,5 +1,4 @@
-// src/controllers/usuariosController.js
-import { conexion } from '../db/conexion.js'; // Importamos la conexión a la base de datos
+import { conexion } from '../db/conexion.js'; 
 import { validarUsuario,validarCorreoExistente } from '../utils/validaciones.js';
 import {paginarResultados} from '../utils/paginacion.js'
 
@@ -41,7 +40,6 @@ const createUsuario = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al crear el usuario' });
   }
 };
-
 // Falta agregar permisos.
 // Lógica para obtener todos los usuarios con opción de filtrado
 const getAllUsuarios = async (req, res) => {
@@ -135,12 +133,11 @@ const getUsuarioPorId = async (req, res) => {
   }
 };
 // Lógica para obtener usuarios con paginación y opción de filtrado
-// Lógica usuarios con paginación y filtros
 const getPaginatedUsuarios = async (req, res) => {
-  const page = parseInt(req.query.page) || 1; // Obtener el número de página
-  const pageSize = parseInt(req.query.pageSize) || 10; // Obtener el tamaño de la página
+  const page = parseInt(req.query.page) || 1; //número de página
+  const pageSize = parseInt(req.query.pageSize) || 10; //tamaño de la página
 
-  // Inicializar la consulta base
+  // consulta base
   let queryBase = `
     SELECT 
       usuarios.idUsuario, 
@@ -159,16 +156,16 @@ const getPaginatedUsuarios = async (req, res) => {
       usuarios.idTipoUsuario = tipos.idUsuarioTipo
   `;
 
-  // Inicializar un array para los filtros
+  // array para los filtros
   const filters = [];
 
-  // Comprobar si se envía el parámetro 'activo' para filtrar usuarios activos/inactivos
+  // comprueba si se envía el parámetro 'activo' para filtrar usuarios activos/inactivos
   if (req.query.activo !== undefined) {
-    const activo = req.query.activo === 'true' ? 1 : 0; // Convertir a 1 o 0
+    const activo = req.query.activo === 'true' ? 1 : 0; // Lo convierte a 1 o 0
     filters.push(`usuarios.activo = ${activo}`);
   }
 
-  // Comprobar si se envía el parámetro 'idTipoUsuario' para filtrar por tipo de usuario
+  // comprueba si se envía el parámetro 'idTipoUsuario' para filtrar por tipo de usuario
   if (req.query.idTipoUsuario) {
     filters.push(`usuarios.idTipoUsuario = ${req.query.idTipoUsuario}`);
   }
@@ -183,7 +180,7 @@ const getPaginatedUsuarios = async (req, res) => {
 
   try {
     const paginatedResult = await paginarResultados(queryBase, page, pageSize, conexion);
-    // Comprobar si hay resultados
+    // comprueba si hay resultados
     if (paginatedResult.length === 0) {
       return res.status(404).json({ mensaje: 'No se encontraron usuarios que coincidan con los criterios de búsqueda.' });
     }
@@ -193,20 +190,18 @@ const getPaginatedUsuarios = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener los usuarios' });
   }
 };
-
 //Lógica para modificar un usuario.
 const updateUsuario = async (req, res) => {
-  const { idUsuario } = req.params; // Obtener el ID del usuario desde los parámetros
+  const { idUsuario } = req.params; 
   console.log(`ID del usuario a actualizar: ${idUsuario}`);
   const { nombre, apellido, correoElectronico, contrasenia, idTipoUsuario, imagen } = req.body;
-
-  // Validaciones opcionales para campos que deseas asegurarte que no sean nulos o vacíos.
-  const errores = validarUsuario(req.body); // Puedes ajustar esto según cómo manejes la validación
+ 
+  const errores = validarUsuario(req.body); 
   if (errores.length > 0) {
     return res.status(400).json({ errores });
   }
 
-  // Construir la consulta de actualización
+  // Esto es para Construir la consulta de actualización
   const updates = [];
   const values = [];
 
@@ -240,7 +235,7 @@ const updateUsuario = async (req, res) => {
     return res.status(400).json({ mensaje: 'No se proporcionaron campos para actualizar.' });
   }
 
-  // Agregar el ID del usuario al final de los valores
+  // Esto Agrega el ID del usuario al final de los valores
   values.push(idUsuario);
 
   try {
@@ -262,7 +257,6 @@ const updateUsuario = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al actualizar el usuario' });
   }
 };
-
 // Controlador para baja lógica de un usuario
 const deleteUsuario = async (req, res) => {
   const { idUsuario } = req.params;
