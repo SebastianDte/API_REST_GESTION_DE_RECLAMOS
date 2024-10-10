@@ -59,7 +59,7 @@ const createOficina = async (req, res) => {
     try {
         const cambios = {};
         
-        // Verificar y agregar solo los campos que están presentes en el cuerpo de la solicitud
+        // Verifica y agrega solo los campos que están presentes en el cuerpo de la solicitud
         if (nombre) {
             if (await validarNombreOficinaExistente(nombre)) {
                 return res.status(400).json({ mensaje: 'Ya existe una oficina con este nombre.' });
