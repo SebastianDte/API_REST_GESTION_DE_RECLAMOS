@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from 'dotenv';
-import { sendEmail } from './services/emailController.js';
+import { sendEmail } from './controllers/emailController.js';
 import v1Routes from './v1/index.js';
 
 //No tocar !!!
@@ -14,7 +14,7 @@ app.use('/api/v1', v1Routes);
 
 //Envio de correo - NO VA ACÁ, PERO ANDA, LUEGO LO ORDENO.
 app.post('/notificacion', async (req, res) => {
-    console.log("Ruta /notificacion alcanzada");
+    //console.log("Ruta /notificacion alcanzada");
     // Es quien va a recibir el correo, a donde se va a mandar se toma del cuerpo del json.
     const correoDestino = req.body.correoElectronico;
     try {
