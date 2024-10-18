@@ -1,10 +1,5 @@
 import { conexion } from '../db/conexion.js'; // Asegúrate de importar la conexión
 
-//Estas validaciones las hice de forma generica, a medida que tenga que reutilizar alguna validación
-//las voy encapsulando mejor. Por ahora que el proyecto esta arrancando cumplen bien.
-
-//Observación:La validación de correo esta repetida, luego refactorizo la llamada a validar correo en el controlador.
-
 //Validar los datos para crear un usuario.
 export const validarUsuario = (usuario) => {
     const { nombre, apellido, correoElectronico, contrasenia, idTipoUsuario } = usuario;

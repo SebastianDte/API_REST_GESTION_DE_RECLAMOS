@@ -6,9 +6,9 @@ const router = express.Router();
 
 // Ruta para crear un usuario.
 router.post('/usuarios', usuariosController.createUsuario); 
-// obtener todos los usuarios
-// router.get('/usuarios', usuariosController.getAllUsuarios);
-// // Ruta para obtener un usuario por ID
+//obtener todos los usuarios
+router.get('/usuarios', usuariosController.getUsuarios);
+// Ruta para obtener un usuario por ID
 // router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
 // // Ruta para obtener usuarios con paginación
 // router.get('/usuarios/paginated', usuariosController.getPaginatedUsuarios);
