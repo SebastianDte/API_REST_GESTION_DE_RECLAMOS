@@ -22,7 +22,13 @@ class UsuariosService {
         // Construcción de la consulta
         const queryParams = { activo, idTipoUsuario, nombre, apellido, page, pageSize };
         return await usuariosDB.obtenerUsuarios(queryParams);
-      }
+    }
+
+    async obtenerUsuarioPorId (id){
+        // Llamar a la función de la capa de base de datos
+        const usuario = await usuariosDB.obtenerUsuarioPorId(id);
+        return usuario; // Devuelve el resultado obtenido
+      };
 }
 
 export default UsuariosService;

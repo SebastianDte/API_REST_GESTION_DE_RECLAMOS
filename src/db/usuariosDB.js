@@ -139,7 +139,25 @@ class UsuariosDB {
         return rows;
     }
     
-    
+    async obtenerUsuarioPorId(id){
+        const [rows] = await conexion.query(
+          `SELECT usuarios.idUsuario, 
+                  usuarios.nombre, 
+                  usuarios.apellido, 
+                  usuarios.correoElectronico, 
+                  usuarios.contrasenia, 
+                  tipos.descripcion AS tipoUsuario, 
+                  usuarios.imagen, 
+                  usuarios.activo 
+           FROM usuarios 
+           JOIN usuariosTipo AS tipos ON usuarios.idTipoUsuario = tipos.idUsuarioTipo 
+           WHERE usuarios.idUsuario = ?`, 
+          [id]
+        );
+      
+        return rows.length > 0 ? rows[0] : null; // Retorna el usuario o null si no se encuentra
+      };
+       
 }
 
 export default UsuariosDB;

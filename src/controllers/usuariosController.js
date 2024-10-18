@@ -36,36 +36,18 @@ const getUsuarios = async (req, res) => {
   };
 
 const getUsuarioPorId = async (req, res) => {
-  const { id } = req.params; // Obtenemos el ID del parámetro de ruta
-
-  try {
-    // Consulta SQL para obtener el usuario por ID
-    const [rows] = await conexion.query(
-      `SELECT usuarios.idUsuario, 
-              usuarios.nombre, 
-              usuarios.apellido, 
-              usuarios.correoElectronico, 
-              usuarios.contrasenia, 
-              tipos.descripcion AS tipoUsuario, 
-              usuarios.imagen, 
-              usuarios.activo 
-       FROM usuarios 
-       JOIN usuariosTipo AS tipos ON usuarios.idTipoUsuario = tipos.idUsuarioTipo 
-       WHERE usuarios.idUsuario = ?`, 
-       [id] // Usamos ? para prevenir inyecciones SQL
-    );
-
-    // Verificamos si se encontró el usuario
-    if (rows.length === 0) {
-      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    const { id } = req.params;
+  
+    try {
+      const usuario = await usuariosService.obtenerUsuarioPorId(id);
+      if (!usuario) {
+        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+      res.status(200).json(usuario);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ mensaje: 'Error al obtener el usuario' });
     }
-
-    // Retornamos el usuario encontrado
-    res.status(200).json(rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensaje: 'Error al obtener el usuario' });
-  }
 };
 //Lógica para modificar un usuario.
 const updateUsuario = async (req, res) => {
@@ -191,5 +173,6 @@ const reactivarUsuario = async (req, res) => {
 export default {
   createUsuario,
   getUsuarios,
+  getUsuarioPorId,
 
 };

@@ -9,7 +9,9 @@ router.post('/usuarios', usuariosController.createUsuario);
 //obtener todos los usuarios
 router.get('/usuarios', usuariosController.getUsuarios);
 // Ruta para obtener un usuario por ID
-// router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
+router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
+
+
 // // Ruta para obtener usuarios con paginación
 // router.get('/usuarios/paginated', usuariosController.getPaginatedUsuarios);
 // // Ruta para actualizar un usuario
