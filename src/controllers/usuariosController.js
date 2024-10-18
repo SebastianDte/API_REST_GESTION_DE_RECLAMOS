@@ -49,6 +49,8 @@ const getUsuarioPorId = async (req, res) => {
       res.status(500).json({ mensaje: 'Error al obtener el usuario' });
     }
 };
+
+
 //Lógica para modificar un usuario.
 const updateUsuario = async (req, res) => {
   const { idUsuario } = req.params; 

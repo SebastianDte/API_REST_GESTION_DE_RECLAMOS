@@ -25,10 +25,9 @@ class UsuariosService {
     }
 
     async obtenerUsuarioPorId (id){
-        // Llamar a la función de la capa de base de datos
         const usuario = await usuariosDB.obtenerUsuarioPorId(id);
-        return usuario; // Devuelve el resultado obtenido
-      };
+        return usuario; 
+    };
 }
 
 export default UsuariosService;

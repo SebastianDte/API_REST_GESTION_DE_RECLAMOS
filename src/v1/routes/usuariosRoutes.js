@@ -12,8 +12,6 @@ router.get('/usuarios', usuariosController.getUsuarios);
 router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
 
 
-// // Ruta para obtener usuarios con paginación
-// router.get('/usuarios/paginated', usuariosController.getPaginatedUsuarios);
 // // Ruta para actualizar un usuario
 // router.patch('/usuarios/:idUsuario', usuariosController.updateUsuario);
 // // Ruta para eliminar un usuario | BAJA LÓGICA.
