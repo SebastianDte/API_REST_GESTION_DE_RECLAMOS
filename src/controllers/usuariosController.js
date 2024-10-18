@@ -50,65 +50,20 @@ const getUsuarioPorId = async (req, res) => {
     }
 };
 
-
-//Lógica para modificar un usuario.
 const updateUsuario = async (req, res) => {
   const { idUsuario } = req.params; 
   console.log(`ID del usuario a actualizar: ${idUsuario}`);
   const { nombre, apellido, correoElectronico, contrasenia, idTipoUsuario, imagen } = req.body;
- 
+
   const errores = validarUsuario(req.body); 
   if (errores.length > 0) {
     return res.status(400).json({ errores });
   }
 
-  // Esto es para Construir la consulta de actualización
-  const updates = [];
-  const values = [];
-
-  if (nombre) {
-    updates.push('nombre = ?');
-    values.push(nombre);
-  }
-  if (apellido) {
-    updates.push('apellido = ?');
-    values.push(apellido);
-  }
-  if (correoElectronico) {
-    updates.push('correoElectronico = ?');
-    values.push(correoElectronico);
-  }
-  if (contrasenia) {
-    updates.push('contrasenia = ?');
-    values.push(contrasenia);
-  }
-  if (idTipoUsuario) {
-    updates.push('idTipoUsuario = ?');
-    values.push(idTipoUsuario);
-  }
-  if (imagen) {
-    updates.push('imagen = ?');
-    values.push(imagen);
-  }
-
-  // Si no hay campos para actualizar
-  if (updates.length === 0) {
-    return res.status(400).json({ mensaje: 'No se proporcionaron campos para actualizar.' });
-  }
-
-  // Esto Agrega el ID del usuario al final de los valores
-  values.push(idUsuario);
-
   try {
-    const query = `
-      UPDATE usuarios 
-      SET ${updates.join(', ')}
-      WHERE idUsuario = ?
-    `;
-
-    const [result] = await conexion.query(query, values);
-
-    if (result.affectedRows === 0) {
+    const resultado = await usuariosService.actualizarUsuarioService(idUsuario, { nombre, apellido, correoElectronico, contrasenia, idTipoUsuario, imagen });
+    
+    if (resultado.affectedRows === 0) {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
 
@@ -118,6 +73,92 @@ const updateUsuario = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al actualizar el usuario' });
   }
 };
+
+
+
+
+
+
+
+//Lógica para modificar un usuario.
+// const updateUsuario = async (req, res) => {
+//   const { idUsuario } = req.params; 
+//   console.log(`ID del usuario a actualizar: ${idUsuario}`);
+//   const { nombre, apellido, correoElectronico, contrasenia, idTipoUsuario, imagen } = req.body;
+ 
+//   const errores = validarUsuario(req.body); 
+//   if (errores.length > 0) {
+//     return res.status(400).json({ errores });
+//   }
+
+//   // Esto es para Construir la consulta de actualización
+//   const updates = [];
+//   const values = [];
+
+//   if (nombre) {
+//     updates.push('nombre = ?');
+//     values.push(nombre);
+//   }
+//   if (apellido) {
+//     updates.push('apellido = ?');
+//     values.push(apellido);
+//   }
+//   if (correoElectronico) {
+//     updates.push('correoElectronico = ?');
+//     values.push(correoElectronico);
+//   }
+//   if (contrasenia) {
+//     updates.push('contrasenia = ?');
+//     values.push(contrasenia);
+//   }
+//   if (idTipoUsuario) {
+//     updates.push('idTipoUsuario = ?');
+//     values.push(idTipoUsuario);
+//   }
+//   if (imagen) {
+//     updates.push('imagen = ?');
+//     values.push(imagen);
+//   }
+
+//   // Si no hay campos para actualizar
+//   if (updates.length === 0) {
+//     return res.status(400).json({ mensaje: 'No se proporcionaron campos para actualizar.' });
+//   }
+
+//   // Esto Agrega el ID del usuario al final de los valores
+//   values.push(idUsuario);
+
+//   try {
+//     const query = `
+//       UPDATE usuarios 
+//       SET ${updates.join(', ')}
+//       WHERE idUsuario = ?
+//     `;
+
+//     const [result] = await conexion.query(query, values);
+
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+//     }
+
+//     res.status(200).json({ mensaje: 'Usuario actualizado con éxito' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ mensaje: 'Error al actualizar el usuario' });
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
 // Controlador para baja lógica de un usuario
 const deleteUsuario = async (req, res) => {
   const { idUsuario } = req.params;
@@ -176,5 +217,6 @@ export default {
   createUsuario,
   getUsuarios,
   getUsuarioPorId,
+  updateUsuario,
 
 };

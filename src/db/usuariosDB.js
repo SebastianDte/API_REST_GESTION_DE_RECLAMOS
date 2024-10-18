@@ -101,7 +101,17 @@ class UsuariosDB {
         );
       
         return rows.length > 0 ? rows[0] : null; 
-      };
+    };
+
+    async actualizarUsuario(updates, values) {
+        const query = `
+          UPDATE usuarios 
+          SET ${updates.join(', ')}
+          WHERE idUsuario = ?
+        `;
+    
+        return await conexion.query(query, values);
+    }
        
 }
 
