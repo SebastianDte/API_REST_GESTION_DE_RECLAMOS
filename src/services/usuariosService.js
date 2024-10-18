@@ -18,7 +18,7 @@ class UsuariosService {
         return nuevoUsuario;
     }
 
-     async obtenerUsuarios({ activo, idTipoUsuario, nombre, apellido, page, pageSize }) {
+    async obtenerUsuarios({ activo, idTipoUsuario, nombre, apellido, page, pageSize }) {
         // Construcción de la consulta
         const queryParams = { activo, idTipoUsuario, nombre, apellido, page, pageSize };
         return await usuariosDB.obtenerUsuarios(queryParams);
