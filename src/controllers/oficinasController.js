@@ -1,5 +1,5 @@
 import { conexion } from '../db/conexion.js';
-import { validarUsuario, validarCorreoExistente } from '../utils/validaciones.js';
+// import { validarUsuario, validarCorreoExistente } from '../utils/validaciones.js';
 import { validarNombreOficinaExistente,validarIdReclamoTipo,validarOficinaEstado} from '../utils/validacionesOficinas.js'
 
 // Controlador para obtener todas las oficinas
