@@ -72,7 +72,7 @@ class UsuariosService {
     return await usuariosDB.actualizarUsuario(idUsuario, updates, values);
     };
 
-    async eliminarUsuarioService (idUsuario){
+    async eliminarUsuario (idUsuario){
         const usuario = await existeUsuario(idUsuario);
         if (!usuario) {
             throw new Error('Usuario no encontrado');
@@ -84,6 +84,20 @@ class UsuariosService {
     
         await usuariosDB.darBajaUsuario(idUsuario);
         return { mensaje: 'Usuario dado de baja correctamente' };
+    };
+
+    async reactivarUsuario (idUsuario){
+        const usuario = await existeUsuario(idUsuario);
+        if (!usuario) {
+            throw new Error('Usuario no encontrado');
+        }
+    
+        if (usuario.activo === 1) {
+            throw new Error('El usuario ya está activo');
+        }
+    
+        await usuariosDB.reactivarUsuario(idUsuario);
+        return { mensaje: 'Usuario reactivado correctamente' };
     };
  
 }

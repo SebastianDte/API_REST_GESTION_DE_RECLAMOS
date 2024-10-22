@@ -14,9 +14,7 @@ router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
 router.patch('/usuarios/:idUsuario', usuariosController.updateUsuario);
 // // Ruta para eliminar un usuario | BAJA LÓGICA.
 router.delete('/usuarios/:idUsuario', usuariosController.deleteUsuario);
-
-
 // // Ruta para reactivar un usuario
-// router.patch('/usuarios/alta/:idUsuario', usuariosController.reactivarUsuario);
+router.patch('/usuarios/alta/:idUsuario', usuariosController.reactivarUsuario);
 
 export default router; 
