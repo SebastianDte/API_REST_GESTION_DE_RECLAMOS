@@ -1,4 +1,4 @@
-import { validarCorreoExistente } from "../utils/validacionesUsuarios.js";
+import { validarCorreoExistente,existeUsuario } from "../utils/validacionesUsuarios.js";
 import UsuariosDB from "../db/usuariosDB.js";
 
 const usuariosDB = new UsuariosDB();
@@ -29,7 +29,7 @@ class UsuariosService {
         return usuario; 
     };
     
-  async actualizarUsuarioService(idUsuario, datos) {
+  async actualizarUsuario(idUsuario, datos) {
     // Obtener el usuario actual para conservar los valores originales
     const usuarioExistente = await usuariosDB.obtenerUsuarioPorId(idUsuario);
 
@@ -70,6 +70,20 @@ class UsuariosService {
     }
 
     return await usuariosDB.actualizarUsuario(idUsuario, updates, values);
+    };
+
+    async eliminarUsuarioService (idUsuario){
+        const usuario = await existeUsuario(idUsuario);
+        if (!usuario) {
+            throw new Error('Usuario no encontrado');
+        }
+    
+        if (usuario.activo === 0) {
+            throw new Error('El usuario ya ha sido dado de baja');
+        }
+    
+        await usuariosDB.darBajaUsuario(idUsuario);
+        return { mensaje: 'Usuario dado de baja correctamente' };
     };
  
 }

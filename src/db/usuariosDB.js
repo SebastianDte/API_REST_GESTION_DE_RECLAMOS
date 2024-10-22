@@ -103,11 +103,6 @@ class UsuariosDB {
         return rows.length > 0 ? rows[0] : null; 
     };
 
-    async existeUsuario(idUsuario) {
-        const [rows] = await conexion.query('SELECT * FROM usuarios WHERE idUsuario = ?', [idUsuario]);
-        return rows.length > 0; // Devuelve true si el usuario existe
-    }
-
     async actualizarUsuario(idUsuario, updates, values) {
         const query = `
             UPDATE usuarios 
@@ -121,6 +116,10 @@ class UsuariosDB {
         const [result] = await conexion.query(query, values);
         return result; // Asegúrate de devolver el resultado correcto
     }
+
+    async darBajaUsuario (idUsuario){
+        await conexion.query('UPDATE usuarios SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
+    };
 }
 
 export default UsuariosDB;
