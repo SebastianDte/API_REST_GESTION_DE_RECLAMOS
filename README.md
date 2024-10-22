@@ -7,7 +7,7 @@
 - [Sebastián Duarte](https://github.com/SebastianDte)  
 
 ### Documentación de Postman
-Puedes acceder a la documentación de la API en el siguiente enlace:  
+Enlace para acceder a la documentación de la API:  
 [Documentación de Postman](https://documenter.getpostman.com/view/38737734/2sAXxS6W7B)
 
 ### Docentes
