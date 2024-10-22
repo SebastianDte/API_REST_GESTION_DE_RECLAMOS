@@ -1,8 +1,8 @@
-import { validarNombreOficinaExistente,validarIdReclamoTipo,validarOficinaEstado} from '../utils/validacionesOficinas.js'
+import {validarIdReclamoTipo,validarNombreOficinaExistente} from '../utils/validacionesOficinas.js'
 
-import OficinasService from './OficinasService.js';
+import OficinasService from "../services/oficinasService.js";
 
-const oficinasService = new OficinasService(); // Instancia del servicio
+const oficinasService = new OficinasService(); 
 const obtenerOficinas = async (req, res) => {
   const { activo, nombre, page, pageSize } = req.query; // Extraemos parámetros de la consulta
 
@@ -24,85 +24,39 @@ const obtenerOficinas = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener las oficinas.' });
   }
 };
+const createOficina = async (req, res) => {
+  const { activo, idReclamoTipo, nombre } = req.body;
 
-// Controlador para crear una oficina
-// const createOficina = async (req, res) => {
-//     const { activo, idReclamoTipo, nombre } = req.body;
-//     try {
-//     // Validar si ya existe una oficina con el mismo nombre
-//     if (await validarNombreOficinaExistente(nombre)) {
-//       return res.status(400).json({ mensaje: 'Ya existe una oficina con este nombre.' });
-//     }
-
-//      // Validar si el idReclamoTipo existe
-//      if (!await validarIdReclamoTipo(idReclamoTipo)) {
-//       return res.status(400).json({ mensaje: 'idReclamoTipo no válido.' });
-//     }
-//       const result = await conexion.execute('INSERT INTO oficinas (activo, idReclamoTipo, nombre) VALUES (?, ?, ?)', [activo, idReclamoTipo, nombre]);
-//       res.status(201).json({ id: result[0].insertId, mensaje: 'Oficina creada exitosamente.' });
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ mensaje: 'Error al crear la oficina.' });
-//     }
-//   };
-//   // Controlador para obtener una oficina por ID
-//   const obtenerOficinaPorId = async (req, res) => {
-//     const { id } = req.params;
-//     try {
-//       const [oficina] = await conexion.execute('SELECT * FROM oficinas WHERE idOficina = ?', [id]);
-//       if (oficina.length === 0) {
-//         return res.status(404).json({ mensaje: 'Oficina no encontrada.' });
-//       }
-//       res.status(200).json(oficina[0]);
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ mensaje: 'Error al obtener la oficina.' });
-//     }
-//   };
-//   // Controlador para actualizar una oficina
-//   const updateOficina = async (req, res) => {
-//     const { id } = req.params;
-//     const { idReclamoTipo, nombre } = req.body;
+  try {
+    // Llamar al servicio para crear la oficina
+    const result = await oficinasService.crearOficinaService({ activo, idReclamoTipo, nombre });
     
-//     try {
-//         const cambios = {};
-        
-//         // Verifica y agrega solo los campos que están presentes en el cuerpo de la solicitud
-//         if (nombre) {
-//             if (await validarNombreOficinaExistente(nombre)) {
-//                 return res.status(400).json({ mensaje: 'Ya existe una oficina con este nombre.' });
-//             }
-//             cambios.nombre = nombre;
-//         }
-        
-//         if (idReclamoTipo) {
-//             if (!await validarIdReclamoTipo(idReclamoTipo)) {
-//                 return res.status(400).json({ mensaje: 'idReclamoTipo no válido.' });
-//             }
-//             cambios.idReclamoTipo = idReclamoTipo;
-//         }
-        
-//         // Si no hay cambios, se puede devolver un mensaje o manejarlo según tu lógica
-//         if (Object.keys(cambios).length === 0) {
-//             return res.status(400).json({ mensaje: 'No se proporcionaron cambios para actualizar.' });
-//         }
-        
-//         // Construir la consulta SQL dinámica
-//         const setClause = Object.keys(cambios).map(key => `${key} = ?`).join(', ');
-//         const values = Object.values(cambios);
-        
-//         const result = await conexion.execute(`UPDATE oficinas SET ${setClause} WHERE idOficina = ?`, [...values, id]);
-        
-//         if (result[0].affectedRows === 0) {
-//             return res.status(404).json({ mensaje: 'Oficina no encontrada.' });
-//         }
-        
-//         res.status(200).json({ mensaje: 'Oficina actualizada exitosamente.' });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ mensaje: 'Error al actualizar la oficina.' });
-//     }
-// };
+    // Enviar la respuesta exitosa
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    // Manejar errores de validación o de base de datos
+    res.status(error.status || 500).json({ mensaje: error.message || 'Error al crear la oficina.' });
+  }
+};
+const obtenerOficinaPorId = async (req, res) => {
+  const { id } = req.params;
+  try {
+      // Llamar al servicio para obtener la oficina por ID
+      const oficina = await oficinasService.obtenerOficinaPorId(id);
+      
+      // Enviar la respuesta exitosa
+      res.status(200).json(oficina);
+  } catch (error) {
+      console.error(error);
+      // Manejar errores
+      res.status(error.status || 500).json({ mensaje: error.message || 'Error al obtener la oficina.' });
+  }
+};
+
+
+
+
 //   // Controlador para eliminar una oficina (baja lógica)
 //   const deleteOficina = async (req, res) => {
 //     const { id } = req.params;
@@ -129,5 +83,6 @@ const obtenerOficinas = async (req, res) => {
 // };
   export default {
     obtenerOficinas,
-    
+    createOficina,
+    obtenerOficinaPorId,
   };
