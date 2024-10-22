@@ -101,8 +101,25 @@ class UsuariosDB {
         );
       
         return rows.length > 0 ? rows[0] : null; 
-      };
-       
+    };
+
+    async actualizarUsuario(idUsuario, updates, values) {
+        const query = `
+            UPDATE usuarios 
+            SET ${updates.join(', ')}
+            WHERE idUsuario = ?
+        `;
+        // Agregar el ID al final de los valores
+        values.push(idUsuario);
+
+        // Ejecuta la consulta
+        const [result] = await conexion.query(query, values);
+        return result; // Asegúrate de devolver el resultado correcto
+    }
+
+    async darBajaUsuario (idUsuario){
+        await conexion.query('UPDATE usuarios SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
+    };
 }
 
 export default UsuariosDB;

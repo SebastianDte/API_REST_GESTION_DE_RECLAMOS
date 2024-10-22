@@ -1,4 +1,4 @@
-import { validarUsuario } from '../utils/validacionesUsuarios.js';
+import { validarUsuario,validarCorreoExistente,existeUsuario } from '../utils/validacionesUsuarios.js';
 import UsuariosService from '../services/usuariosService.js';
 // import { conexion } from '../db/conexion.js';
 
@@ -50,65 +50,31 @@ const getUsuarioPorId = async (req, res) => {
     }
 };
 
-
-//Lógica para modificar un usuario.
 const updateUsuario = async (req, res) => {
-  const { idUsuario } = req.params; 
+  const { idUsuario } = req.params;
   console.log(`ID del usuario a actualizar: ${idUsuario}`);
-  const { nombre, apellido, correoElectronico, contrasenia, idTipoUsuario, imagen } = req.body;
- 
-  const errores = validarUsuario(req.body); 
+
+  const { correoElectronico } = req.body;
+
+  const errores = validarUsuario(req.body, true);  
   if (errores.length > 0) {
     return res.status(400).json({ errores });
   }
 
-  // Esto es para Construir la consulta de actualización
-  const updates = [];
-  const values = [];
-
-  if (nombre) {
-    updates.push('nombre = ?');
-    values.push(nombre);
-  }
-  if (apellido) {
-    updates.push('apellido = ?');
-    values.push(apellido);
-  }
-  if (correoElectronico) {
-    updates.push('correoElectronico = ?');
-    values.push(correoElectronico);
-  }
-  if (contrasenia) {
-    updates.push('contrasenia = ?');
-    values.push(contrasenia);
-  }
-  if (idTipoUsuario) {
-    updates.push('idTipoUsuario = ?');
-    values.push(idTipoUsuario);
-  }
-  if (imagen) {
-    updates.push('imagen = ?');
-    values.push(imagen);
-  }
-
-  // Si no hay campos para actualizar
-  if (updates.length === 0) {
-    return res.status(400).json({ mensaje: 'No se proporcionaron campos para actualizar.' });
-  }
-
-  // Esto Agrega el ID del usuario al final de los valores
-  values.push(idUsuario);
-
   try {
-    const query = `
-      UPDATE usuarios 
-      SET ${updates.join(', ')}
-      WHERE idUsuario = ?
-    `;
+    const existe = await existeUsuario(idUsuario);
+    if (!existe) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+    if (correoElectronico) {
+      const correoExistente = await validarCorreoExistente(correoElectronico);
+      if (correoExistente) {
+        return res.status(400).json({ mensaje: 'El correo electrónico ya está en uso por otro usuario.' });
+      }
+    }
+    const resultado = await usuariosService.actualizarUsuario(idUsuario, req.body);
 
-    const [result] = await conexion.query(query, values);
-
-    if (result.affectedRows === 0) {
+    if (resultado.affectedRows === 0) {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
 
@@ -118,33 +84,53 @@ const updateUsuario = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al actualizar el usuario' });
   }
 };
-// Controlador para baja lógica de un usuario
-const deleteUsuario = async (req, res) => {
+
+export const deleteUsuario = async (req, res) => {
   const { idUsuario } = req.params;
 
   try {
-    // Verificar si el usuario existe y está activo
-    const [usuario] = await conexion.query('SELECT activo FROM usuarios WHERE idUsuario = ?', [idUsuario]);
+      const resultado = await usuariosService.eliminarUsuarioService(idUsuario);
+      res.json(resultado);
+  } catch (error) {
+      console.error(error);
+      if (error.message === 'Usuario no encontrado') {
+          return res.status(404).json({ mensaje: error.message });
+      } else if (error.message === 'El usuario ya ha sido dado de baja') {
+          return res.status(400).json({ mensaje: error.message });
+      }
+      res.status(500).json({ mensaje: 'Error al dar de baja al usuario' });
+  }
+};
 
-    if (usuario.length === 0) {
-        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    }
 
-    // Si el usuario ya está inactivo (baja lógica)
-    if (usuario[0].activo === 0) {
-        return res.status(400).json({ mensaje: 'El usuario ya ha sido dado de baja' });
-    }
 
-    // Realizar la baja lógica
-    await conexion.query('UPDATE usuarios SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
-    res.json({ mensaje: 'Usuario dado de baja correctamente' });
+// Controlador para baja lógica de un usuario
+// const deleteUsuario = async (req, res) => {
+//   const { idUsuario } = req.params;
+
+//   try {
+//     // Verificar si el usuario existe y está activo
+//     const [usuario] = await conexion.query('SELECT activo FROM usuarios WHERE idUsuario = ?', [idUsuario]);
+
+//     if (usuario.length === 0) {
+//         return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+//     }
+
+//     // Si el usuario ya está inactivo (baja lógica)
+//     if (usuario[0].activo === 0) {
+//         return res.status(400).json({ mensaje: 'El usuario ya ha sido dado de baja' });
+//     }
+
+//     // Realizar la baja lógica
+//     await conexion.query('UPDATE usuarios SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
+//     res.json({ mensaje: 'Usuario dado de baja correctamente' });
 
     
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensaje: 'Error al dar de baja al usuario' });
-}
-};
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ mensaje: 'Error al dar de baja al usuario' });
+// }
+// };
 //Controlador para activar un usuario.
 const reactivarUsuario = async (req, res) => {
   const { idUsuario } = req.params;
@@ -176,5 +162,7 @@ export default {
   createUsuario,
   getUsuarios,
   getUsuarioPorId,
+  updateUsuario,
+  deleteUsuario,
 
 };

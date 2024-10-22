@@ -10,12 +10,12 @@ router.post('/usuarios', usuariosController.createUsuario);
 router.get('/usuarios', usuariosController.getUsuarios);
 // Ruta para obtener un usuario por ID
 router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
-
-
 // // Ruta para actualizar un usuario
-// router.patch('/usuarios/:idUsuario', usuariosController.updateUsuario);
+router.patch('/usuarios/:idUsuario', usuariosController.updateUsuario);
 // // Ruta para eliminar un usuario | BAJA LÓGICA.
-// router.delete('/usuarios/:idUsuario', usuariosController.deleteUsuario);
+router.delete('/usuarios/:idUsuario', usuariosController.deleteUsuario);
+
+
 // // Ruta para reactivar un usuario
 // router.patch('/usuarios/alta/:idUsuario', usuariosController.reactivarUsuario);
 
