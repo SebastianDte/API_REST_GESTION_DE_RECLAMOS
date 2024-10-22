@@ -103,16 +103,24 @@ class UsuariosDB {
         return rows.length > 0 ? rows[0] : null; 
     };
 
-    async actualizarUsuario(updates, values) {
-        const query = `
-          UPDATE usuarios 
-          SET ${updates.join(', ')}
-          WHERE idUsuario = ?
-        `;
-    
-        return await conexion.query(query, values);
+    async existeUsuario(idUsuario) {
+        const [rows] = await conexion.query('SELECT * FROM usuarios WHERE idUsuario = ?', [idUsuario]);
+        return rows.length > 0; // Devuelve true si el usuario existe
     }
-       
+
+    async actualizarUsuario(idUsuario, updates, values) {
+        const query = `
+            UPDATE usuarios 
+            SET ${updates.join(', ')}
+            WHERE idUsuario = ?
+        `;
+        // Agregar el ID al final de los valores
+        values.push(idUsuario);
+
+        // Ejecuta la consulta
+        const [result] = await conexion.query(query, values);
+        return result; // Asegúrate de devolver el resultado correcto
+    }
 }
 
 export default UsuariosDB;

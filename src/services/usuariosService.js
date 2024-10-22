@@ -28,47 +28,50 @@ class UsuariosService {
         const usuario = await usuariosDB.obtenerUsuarioPorId(id);
         return usuario; 
     };
+    
+  async actualizarUsuarioService(idUsuario, datos) {
+    // Obtener el usuario actual para conservar los valores originales
+    const usuarioExistente = await usuariosDB.obtenerUsuarioPorId(idUsuario);
 
-    async actualizarUsuarioService (idUsuario, datos){
-        // Esto es para construir la consulta de actualización
-        const updates = [];
-        const values = [];
-      
-        if (datos.nombre) {
-          updates.push('nombre = ?');
-          values.push(datos.nombre);
-        }
-        if (datos.apellido) {
-          updates.push('apellido = ?');
-          values.push(datos.apellido);
-        }
-        if (datos.correoElectronico) {
-          updates.push('correoElectronico = ?');
-          values.push(datos.correoElectronico);
-        }
-        if (datos.contrasenia) {
-          updates.push('contrasenia = ?');
-          values.push(datos.contrasenia);
-        }
-        if (datos.idTipoUsuario) {
-          updates.push('idTipoUsuario = ?');
-          values.push(datos.idTipoUsuario);
-        }
-        if (datos.imagen) {
-          updates.push('imagen = ?');
-          values.push(datos.imagen);
-        }
-      
-        // Si no hay campos para actualizar
-        if (updates.length === 0) {
-          throw new Error('No se proporcionaron campos para actualizar.');
-        }
-      
-        // Agrega el ID del usuario al final de los valores
-        values.push(idUsuario);
-      
-        return await usuariosDB.actualizarUsuario(updates, values);
-      };
+    if (!usuarioExistente) {
+        throw new Error('Usuario no encontrado');
+    }
+
+    const updates = [];
+    const values = [];
+
+    if (datos.nombre || datos.nombre === '') {
+        updates.push('nombre = ?');
+        values.push(datos.nombre || usuarioExistente.nombre);
+    }
+    if (datos.apellido || datos.apellido === '') {
+        updates.push('apellido = ?');
+        values.push(datos.apellido || usuarioExistente.apellido);
+    }
+    if (datos.correoElectronico || datos.correoElectronico === '') {
+        updates.push('correoElectronico = ?');
+        values.push(datos.correoElectronico || usuarioExistente.correoElectronico);
+    }
+    if (datos.contrasenia || datos.contrasenia === '') {
+        updates.push('contrasenia = ?');
+        values.push(datos.contrasenia || usuarioExistente.contrasenia);
+    }
+    if (datos.idTipoUsuario || datos.idTipoUsuario === 0) {
+        updates.push('idTipoUsuario = ?');
+        values.push(datos.idTipoUsuario || usuarioExistente.idTipoUsuario);
+    }
+    if (datos.imagen || datos.imagen === '') {
+        updates.push('imagen = ?');
+        values.push(datos.imagen || usuarioExistente.imagen);
+    }
+
+    if (updates.length === 0) {
+        throw new Error('No se proporcionaron campos para actualizar.');
+    }
+
+    return await usuariosDB.actualizarUsuario(idUsuario, updates, values);
+    };
+ 
 }
 
 export default UsuariosService;
