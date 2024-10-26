@@ -89,7 +89,7 @@ export const deleteUsuario = async (req, res) => {
   const { idUsuario } = req.params;
 
   try {
-      const resultado = await usuariosService.eliminarUsuarioService(idUsuario);
+      const resultado = await usuariosService.eliminarUsuario(idUsuario);
       res.json(resultado);
   } catch (error) {
       console.error(error);
@@ -102,58 +102,19 @@ export const deleteUsuario = async (req, res) => {
   }
 };
 
-
-
-// Controlador para baja lógica de un usuario
-// const deleteUsuario = async (req, res) => {
-//   const { idUsuario } = req.params;
-
-//   try {
-//     // Verificar si el usuario existe y está activo
-//     const [usuario] = await conexion.query('SELECT activo FROM usuarios WHERE idUsuario = ?', [idUsuario]);
-
-//     if (usuario.length === 0) {
-//         return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-//     }
-
-//     // Si el usuario ya está inactivo (baja lógica)
-//     if (usuario[0].activo === 0) {
-//         return res.status(400).json({ mensaje: 'El usuario ya ha sido dado de baja' });
-//     }
-
-//     // Realizar la baja lógica
-//     await conexion.query('UPDATE usuarios SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
-//     res.json({ mensaje: 'Usuario dado de baja correctamente' });
-
-    
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ mensaje: 'Error al dar de baja al usuario' });
-// }
-// };
-//Controlador para activar un usuario.
-const reactivarUsuario = async (req, res) => {
+export const reactivarUsuario = async (req, res) => {
   const { idUsuario } = req.params;
 
   try {
-      // Verificar si el usuario existe y está inactivo
-      const [usuario] = await conexion.query('SELECT activo FROM usuarios WHERE idUsuario = ?', [idUsuario]);
-
-      if (usuario.length === 0) {
-          return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-      }
-
-      // Si el usuario ya está activo
-      if (usuario[0].activo === 1) {
-          return res.status(400).json({ mensaje: 'El usuario ya está activo' });
-      }
-
-      // Reactivar el usuario
-      await conexion.query('UPDATE usuarios SET activo = 1 WHERE idUsuario = ?', [idUsuario]);
-      res.json({ mensaje: 'Usuario reactivado correctamente' });
-
+      const resultado = await usuariosService.reactivarUsuario(idUsuario);
+      res.json(resultado);
   } catch (error) {
       console.error(error);
+      if (error.message === 'Usuario no encontrado') {
+          return res.status(404).json({ mensaje: error.message });
+      } else if (error.message === 'El usuario ya está activo') {
+          return res.status(400).json({ mensaje: error.message });
+      }
       res.status(500).json({ mensaje: 'Error al reactivar al usuario' });
   }
 };
@@ -164,5 +125,5 @@ export default {
   getUsuarioPorId,
   updateUsuario,
   deleteUsuario,
-
+  reactivarUsuario,
 };
