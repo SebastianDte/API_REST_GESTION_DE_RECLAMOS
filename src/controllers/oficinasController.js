@@ -54,7 +54,7 @@ const obtenerOficinaPorId = async (req, res) => {
   }
 };
 
-
+//falta agregar update de oficinas
 
 
 //   // Controlador para eliminar una oficina (baja lógica)
