@@ -7,7 +7,6 @@ export const validarNombreOficinaExistente = async (nombre) => {
     throw { status: 400, message: 'Ya existe una oficina con este nombre.' };
   }
 };
-
 // Validar si el idReclamoTipo es válido
 export const validarIdReclamoTipo = async (idReclamoTipo) => {
   const [tiposReclamos] = await conexion.execute('SELECT * FROM reclamosTipo WHERE idReclamoTipo = ?', [idReclamoTipo]);
@@ -15,7 +14,6 @@ export const validarIdReclamoTipo = async (idReclamoTipo) => {
     throw { status: 400, message: 'idReclamoTipo no válido.' };
   }
 };
-
 // Validar si la oficina está activa o no
 export const validarOficinaEstado = async (idOficina, accion) => {
   const [oficina] = await conexion.execute('SELECT * FROM oficinas WHERE idOficina = ?', [idOficina]);
@@ -45,7 +43,6 @@ export const validarCamposOficina = ({ activo, idReclamoTipo, nombre }) => {
     throw { status: 400, message: 'El nombre no puede exceder los 100 caracteres.' };
   }
 }
-
 export const validarOficinaActiva = async (id) => {
   const [oficina] = await conexion.execute('SELECT * FROM oficinas WHERE idOficina = ?', [id]);
 
@@ -57,5 +54,18 @@ export const validarOficinaActiva = async (id) => {
   // Verificamos si la oficina está activa
   if (!oficina[0].activo) {
     throw { status: 400, message: 'La oficina está dada de baja y no se puede modificar.' };
+  }
+};
+export const validarOficinaInactiva = async (id) => {
+  const [oficina] = await conexion.execute('SELECT * FROM oficinas WHERE idOficina = ?', [id]);
+
+  // Verificamos si la oficina existe
+  if (oficina.length === 0) {
+    throw { status: 404, message: 'Oficina no encontrada.' };
+  }
+  
+  // Verificamos si la oficina está inactiva
+  if (oficina[0].activo) {
+    throw { status: 400, message: 'La oficina ya está activa y no se puede reactivar.' };
   }
 };

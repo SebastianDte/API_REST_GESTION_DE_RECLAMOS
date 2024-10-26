@@ -10,12 +10,10 @@ router.get('/oficinas', oficinasController.obtenerOficinas);
 // Ruta para obtener una oficina por ID.
 router.get('/oficinas/:id', oficinasController.obtenerOficinaPorId); 
 // // Ruta para actualizar una oficina.
-// router.patch('/oficinas/:id', oficinasController.updateOficina); 
-
+router.patch('/oficinas/:id', oficinasController.updateOficina); 
 // // Ruta para eliminar una oficina (baja lógica).
-// router.delete('/oficinas/:id', oficinasController.deleteOficina); 
-
+router.patch('/oficinas/baja/:id', oficinasController.deleteOficina);
 // // Ruta para reactivar una oficina.
-// router.patch('/oficinas/alta/:id', oficinasController.reactivarOficina); 
+router.patch('/oficinas/alta/:id', oficinasController.reactivarOficina); 
 
 export default router; 
