@@ -31,12 +31,10 @@ export const validarUsuario = (usuario, esActualizacion = false) => {
 
     return errores;
 };
-
 export const existeUsuario = async (idUsuario) => {
     const [rows] = await conexion.query('SELECT * FROM usuarios WHERE idUsuario = ?', [idUsuario]);
     return rows.length > 0 ? rows[0] : null;  // Devuelve el primer usuario o null si no existe
 };
-  
 //validar un correo existente
 export const validarCorreoExistente = async (correoElectronico) => {
     const [rows] = await conexion.query('SELECT * FROM usuarios WHERE correoElectronico = ?', [correoElectronico]);

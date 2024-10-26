@@ -120,6 +120,10 @@ class UsuariosDB {
     async darBajaUsuario (idUsuario){
         await conexion.query('UPDATE usuarios SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
     };
+
+    async reactivarUsuario(idUsuario){
+        await conexion.query('UPDATE usuarios SET activo = 1 WHERE idUsuario = ?', [idUsuario]);
+    };
 }
 
 export default UsuariosDB;
