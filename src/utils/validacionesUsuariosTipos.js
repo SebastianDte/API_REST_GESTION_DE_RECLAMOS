@@ -1,11 +1,11 @@
-// validacionesUsuariosTipos.js
 
+//Valida la descripción que no esté vacia.
 const validarDescripcion = (descripcion) => {
     if (!descripcion || descripcion.trim() === "") {
         throw new Error("La descripción es requerida y no puede estar vacía.");
     }
 };
-
+//valida que no se pasen campos en el cuerpo como el ID o ACTIVO.
 const validarSoloDescripcion = (body) => {
     const allowedFields = ['descripcion'];
     const receivedFields = Object.keys(body);
@@ -17,7 +17,7 @@ const validarSoloDescripcion = (body) => {
         throw new Error(`Los siguientes campos no están permitidos: ${invalidFields.join(', ')}`);
     }
 };
-
+//valida que no existe otra descripción igual
 const validarExistenciaDescripcion = async (descripcion, usuariosTipoDB) => {
     const tiposExistentes = await usuariosTipoDB.getAllUsuariosTipo();
     const existe = tiposExistentes.some(tipo => tipo.descripcion.toLowerCase() === descripcion.toLowerCase());

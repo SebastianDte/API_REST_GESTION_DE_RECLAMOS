@@ -8,20 +8,20 @@ class UsuariosTipoService {
     async createUsuarioTipoService(body) {
         // Validación de entrada
         validarSoloDescripcion(body);
-        
+
         const { descripcion } = body;
-        
+
         // Validación de descripción
         validarDescripcion(descripcion);
-        
+
         // Validar si ya existe un tipo de usuario con la misma descripción
         await validarExistenciaDescripcion(descripcion, usuariosTipoDB);
-    
+
         // Crear el tipo de usuario en la base de datos
         const result = await usuariosTipoDB.createUsuarioTipo(descripcion);
         return { mensaje: 'Tipo de usuario creado exitosamente.', result };
     }
-    // Servicio para obtener todos los tipos de usuario
+
     async getAllUsuariosTipoService() {
         return await usuariosTipoDB.getAllUsuariosTipo();
     };
@@ -29,57 +29,52 @@ class UsuariosTipoService {
     async updateUsuarioTipoService(id, body) {
         // Validación de entrada: asegurarse de que solo se permite el campo 'descripcion'
         validarSoloDescripcion(body);
-        
+
         const { descripcion } = body;
-    
+
         // Validación de descripción: debe estar presente y no ser vacía
         validarDescripcion(descripcion);
-    
+
         // Validar si la descripción ya existe en otro tipo de usuario (excluyendo el actual)
         await validarExistenciaDescripcion(descripcion, usuariosTipoDB);
-    
+
         // Actualizar el tipo de usuario en la base de datos
         await usuariosTipoDB.updateUsuarioTipo(id, { descripcion });
         return { mensaje: 'Tipo de usuario actualizado exitosamente.' };
     }
 
-    // Servicio para dar de baja lógica a un tipo de usuario
-   async deleteUsuarioTipoService(id) {
-    // Verificar si el tipo de usuario existe y está activo
-    const usuarioTipo = await usuariosTipoDB.getUsuarioTipoById(id);
-    if (!usuarioTipo) {
-        throw new Error("No existe un tipo de usuario con este ID.");
-    }
-    
-    if (!usuarioTipo.activo) {
-        throw new Error("El tipo de usuario ya ha sido dado de baja.");
-    }
+    async deleteUsuarioTipoService(id) {
+        // Verificar si el tipo de usuario existe y está activo
+        const usuarioTipo = await usuariosTipoDB.getUsuarioTipoById(id);
+        if (!usuarioTipo) {
+            throw new Error("No existe un tipo de usuario con este ID.");
+        }
 
-    // Realizar la baja lógica
-    await usuariosTipoDB.bajaLogicaUsuarioTipo(id);
+        if (!usuarioTipo.activo) {
+            throw new Error("El tipo de usuario ya ha sido dado de baja.");
+        }
 
-    return { mensaje: 'Tipo de usuario dado de baja exitosamente.' };
-}
+        // Realizar la baja lógica
+        await usuariosTipoDB.bajaLogicaUsuarioTipo(id);
 
-async altaUsuarioTipoService(id) {
-    // Verificar si el tipo de usuario existe
-    const usuarioTipo = await usuariosTipoDB.getUsuarioTipoById(id);
-    if (!usuarioTipo) {
-        throw new Error("No existe un tipo de usuario con este ID.");
-    }
-    
-    if (usuarioTipo.activo) {
-        throw new Error("El tipo de usuario ya está activo.");
+        return { mensaje: 'Tipo de usuario dado de baja exitosamente.' };
     }
 
-    // Realizar la alta lógica
-    await usuariosTipoDB.altaLogicaUsuarioTipo(id);
+    async altaUsuarioTipoService(id) {
+        const usuarioTipo = await usuariosTipoDB.getUsuarioTipoById(id);
+        if (!usuarioTipo) {
+            throw new Error("No existe un tipo de usuario con este ID.");
+        }
 
-    return { mensaje: 'Tipo de usuario dado de alta exitosamente.' };
-}
+        if (usuarioTipo.activo) {
+            throw new Error("El tipo de usuario ya está activo.");
+        }
 
+        // Realizar la alta lógica
+        await usuariosTipoDB.altaLogicaUsuarioTipo(id);
 
-
+        return { mensaje: 'Tipo de usuario dado de alta exitosamente.' };
+    }
 }
 
 
