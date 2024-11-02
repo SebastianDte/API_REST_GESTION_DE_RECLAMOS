@@ -1,3 +1,5 @@
+
+
 import ReclamosTipoDB from "../db/reclamosTipoDB.js";
 const reclamosTipoDB = new ReclamosTipoDB();
 
