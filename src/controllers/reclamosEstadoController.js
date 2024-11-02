@@ -1,9 +1,8 @@
 import reclamosEstadoService from '../services/reclamosEstadoService.js';
 
 const createReclamoEstado = async (req, res) => {
-    const { descripcion } = req.body;
     try {
-        const result = await reclamosEstadoService.createReclamoEstadoService({ descripcion });
+        const result = await reclamosEstadoService.createReclamoEstadoService(req.body);
         res.status(201).json(result);
     } catch (error) {
         console.error(error);
@@ -11,7 +10,6 @@ const createReclamoEstado = async (req, res) => {
     }
 };
 
-// Controlador para obtener todos los estados de reclamos
 const getAllReclamosEstado = async (req, res) => {
     try {
         const estados = await reclamosEstadoService.getAllReclamosEstadoService();
@@ -22,12 +20,10 @@ const getAllReclamosEstado = async (req, res) => {
     }
 };
 
-// Controlador para actualizar un estado de reclamo
 const updateReclamoEstado = async (req, res) => {
     const { id } = req.params;
-    const { descripcion } = req.body;
     try {
-        const result = await reclamosEstadoService.updateReclamoEstadoService(id, { descripcion });
+        const result = await reclamosEstadoService.updateReclamoEstadoService(id, req.body);
         res.status(200).json(result);
     } catch (error) {
         console.error(error);
@@ -35,11 +31,21 @@ const updateReclamoEstado = async (req, res) => {
     }
 };
 
-// Controlador para dar de baja lógica a un estado de reclamo
 const deleteReclamoEstado = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await reclamosEstadoService.deleteReclamoEstadoService(id);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ mensaje: error.message });
+    }
+};
+
+const activateReclamoEstado = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await reclamosEstadoService.activateReclamoEstadoService(id);
         res.status(200).json(result);
     } catch (error) {
         console.error(error);
@@ -52,4 +58,5 @@ export default {
     getAllReclamosEstado,
     updateReclamoEstado,
     deleteReclamoEstado,
+    activateReclamoEstado,
 };

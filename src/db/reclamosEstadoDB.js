@@ -1,30 +1,39 @@
 import { conexion } from './conexion.js';
 
-// Función para crear un estado de reclamo
-const createReclamoEstado = async (descripcion) => {
-    const [result] = await conexion.execute('INSERT INTO reclamosEstado (descripcion, activo) VALUES (?, ?)', [descripcion, 1]);
-    return result;
-};
+class UsuariosDB {
 
-// Función para obtener todos los estados de reclamos
-const getAllReclamosEstado = async () => {
-    const [estados] = await conexion.execute('SELECT * FROM reclamosEstado WHERE activo = 1');
-    return estados;
-};
+    async findReclamoEstadoByDescripcion(descripcion) {
+        const [rows] = await conexion.execute('SELECT * FROM reclamosEstado WHERE descripcion = ?', [descripcion]);
+        return rows[0];
+    };
 
-// Función para actualizar un estado de reclamo
-const updateReclamoEstado = async (id, { descripcion }) => {
-    await conexion.execute('UPDATE reclamosEstado SET descripcion = ? WHERE idReclamoEstado = ?', [descripcion, id]);
-};
+    async findReclamoEstadoById(id) {
+        const [rows] = await conexion.execute('SELECT * FROM reclamosEstado WHERE idReclamoEstado = ?', [id]);
+        return rows[0]; 
+    };
 
-// Función para dar de baja lógica a un estado de reclamo
-const bajaLogicaReclamoEstado = async (id) => {
-    await conexion.execute('UPDATE reclamosEstado SET activo = 0 WHERE idReclamoEstado = ?', [id]);
-};
+    async createReclamoEstado(descripcion) {
+        const [result] = await conexion.execute('INSERT INTO reclamosEstado (descripcion, activo) VALUES (?, ?)', [descripcion, 1]);
+        return result;
+    };
 
-export default {
-    createReclamoEstado,
-    getAllReclamosEstado,
-    updateReclamoEstado,
-    bajaLogicaReclamoEstado
-};
+    async getAllReclamosEstado() {
+        const [estados] = await conexion.execute('SELECT * FROM reclamosEstado WHERE activo = 1');
+        return estados;
+    };
+
+    async updateReclamoEstado  (id, { descripcion }) {
+        await conexion.execute('UPDATE reclamosEstado SET descripcion = ? WHERE idReclamoEstado = ?', [descripcion, id]);
+    };
+    
+    async bajaLogicaReclamoEstado(id) {
+        await conexion.execute('UPDATE reclamosEstado SET activo = 0 WHERE idReclamoEstado = ?', [id]);
+    };
+
+    async altaLogicaReclamoEstado(id) {
+        await conexion.execute('UPDATE reclamosEstado SET activo = 1 WHERE idReclamoEstado = ?', [id]);
+    };
+}
+
+
+export default new UsuariosDB();
