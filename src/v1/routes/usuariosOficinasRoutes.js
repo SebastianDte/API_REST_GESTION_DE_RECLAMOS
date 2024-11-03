@@ -3,9 +3,12 @@ import UsuariosOficinasController from '../../controllers/usuariosOficinasContro
 
 const router = express.Router();
 
-router.post('/usuariosOficinas', UsuariosOficinasController.crearRelacion);
-router.get('/usuariosOficinas', UsuariosOficinasController.listarRelaciones);
-router.put('/usuariosOficinas/:id', UsuariosOficinasController.actualizarRelacion);
-router.patch('/usuariosOficinas/baja/:id', UsuariosOficinasController.eliminarRelacion);
+router.post('/usuariosOficinas', UsuariosOficinasController.createUsuarioOficina);
+router.get('/usuariosOficinas', UsuariosOficinasController.getAllUsuariosOficina);
+router.get('/usuariosOficinas/:id', UsuariosOficinasController.getRelacionPorId);
+router.patch('/usuariosOficinas/:id', UsuariosOficinasController.updateUsuarioOficina);
+router.patch('/usuariosOficinas/baja/:id', UsuariosOficinasController.deleteUsuarioOficina);
+router.patch('/usuariosOficinas/alta/:id', UsuariosOficinasController.activarUsuarioOficina);
+
 
 export default router;

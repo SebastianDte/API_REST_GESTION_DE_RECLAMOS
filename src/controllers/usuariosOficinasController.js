@@ -1,60 +1,79 @@
-import UsuariosOficinasService from '../services/usuariosOficinasService.js';
+import usuariosOficinasService from '../services/usuariosOficinasService.js';
 
-const usuariosOficinasService = new UsuariosOficinasService();
 
-const crearRelacion = async (req, res) => {
-    const { idUsuario, idOficina } = req.body;
-
+const createUsuarioOficina = async (req, res) => {
     try {
-        const existe = await usuariosOficinasService.validarExistencia(idUsuario, idOficina);
-        if (!existe) {
-            return res.status(404).json({ mensaje: 'Error: Usuario o Oficina no encontrado.' });
-        }
-
-        const nuevaRelacion = await usuariosOficinasService.crearRelacion(idUsuario, idOficina);
-        res.status(201).json(nuevaRelacion);
+        const { idUsuario, idOficina } = req.body; 
+        const result = await usuariosOficinasService.crearRelacion(idUsuario, idOficina, req.body);
+        res.status(201).json(result);
     } catch (error) {
+        console.error(error);
         res.status(400).json({ mensaje: error.message });
     }
 };
 
-const listarRelaciones = async (req, res) => {
+const getAllUsuariosOficina = async (req, res) => {
     const { idUsuario, idOficina } = req.query;
-
     try {
-        const relaciones = await usuariosOficinasService.listarRelaciones(idUsuario, idOficina);
-        res.json(relaciones);
+        const usuariosOficinas = await usuariosOficinasService.listarRelaciones(idUsuario || null, idOficina || null);
+        res.status(200).json(usuariosOficinas);
     } catch (error) {
-        res.status(500).json({ mensaje: 'Error al obtener las relaciones.' });
+        console.error(error);
+        res.status(500).json({ mensaje: error.message });
     }
 };
 
-const actualizarRelacion = async (req, res) => {
-    const { id } = req.params;
-    const { idOficina, activo } = req.body;
-
+const updateUsuarioOficina = async (req, res) => {
     try {
-        const relacionActualizada = await usuariosOficinasService.actualizarRelacion(id, idOficina, activo);
-        res.json(relacionActualizada);
+        const { id } = req.params; 
+        const result = await usuariosOficinasService.actualizarRelacion(Number(id), req.body);
+        res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ mensaje: 'Error al actualizar la relación.' });
+        console.error(error);
+        res.status(400).json({ mensaje: error.message });
     }
 };
 
-const eliminarRelacion = async (req, res) => {
-    const { id } = req.params;
-
+const deleteUsuarioOficina = async (req, res) => {
+    const { id } = req.params; 
     try {
-        await usuariosOficinasService.eliminarRelacion(id);
-        res.json({ mensaje: 'Relación eliminada correctamente.' });
+        const result = await usuariosOficinasService.eliminarRelacion(id);
+        res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ mensaje: 'Error al eliminar la relación.' });
+        console.error(error);
+        res.status(400).json({ mensaje: error.message });
     }
 };
+
+const activarUsuarioOficina = async (req, res) => {
+    const { id } = req.params; 
+    try {
+        const result = await usuariosOficinasService.activarRelacion(id);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ mensaje: error.message });
+    }
+};
+
+const getRelacionPorId = async (req, res) => {
+    const { id } = req.params; 
+    try {
+        const relacion = await usuariosOficinasService.obtenerRelacionPorId(id);
+        res.status(200).json(relacion);
+    } catch (error) {
+        console.error(error);
+        res.status(404).json({ mensaje: error.message }); 
+    }
+};
+
+
 
 export default {
-    crearRelacion,
-    listarRelaciones,
-    actualizarRelacion,
-    eliminarRelacion,
+    createUsuarioOficina,
+    getAllUsuariosOficina,
+    updateUsuarioOficina,
+    deleteUsuarioOficina,
+    activarUsuarioOficina,
+    getRelacionPorId,
 };
