@@ -60,7 +60,10 @@ class OficinasDB {
     return await conexion.execute(`UPDATE oficinas SET ${setClause} WHERE idOficina = ?`, [...values, id]);
   }
   async bajaLogicaOficina(id) {
-    return await conexion.execute('UPDATE oficinas SET activo = 0 WHERE idOficina = ?', [id]);
+    await conexion.execute('UPDATE oficinas SET activo = 0 WHERE idOficina = ?', [id]);
+    // Desactivar las relaciones en usuariosOficinas
+    await conexion.execute('UPDATE usuariosOficinas SET activo = 0 WHERE idOficina = ?', [id]);
+
   }
   async reactivarOficina(id) {
     return await conexion.execute('UPDATE oficinas SET activo = 1 WHERE idOficina = ?', [id]);
