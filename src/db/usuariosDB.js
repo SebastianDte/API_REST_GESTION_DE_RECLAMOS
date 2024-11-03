@@ -119,6 +119,7 @@ class UsuariosDB {
 
     async darBajaUsuario (idUsuario){
         await conexion.query('UPDATE usuarios SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
+        await conexion.query('UPDATE usuariosOficinas SET activo = 0 WHERE idUsuario = ?', [idUsuario]);
     };
 
     async reactivarUsuario(idUsuario){
