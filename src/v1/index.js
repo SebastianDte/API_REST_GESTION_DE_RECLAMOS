@@ -6,6 +6,8 @@ import usuarioTipoRoutes from './routes/usuarioTipoRoutes.js';
 import reclamosTipoRoutes from './routes/reclamosTipoRoutes.js'; 
 import reclamosEstadoRoutes from './routes/reclamosEstadoRoutes.js'; 
 import usuariosOficinasRoutes from './routes/usuariosOficinasRoutes.js'
+import reclamos from './routes/reclamosRoutes.js'
+
 const router = express.Router();
 
 //Rutas
@@ -16,6 +18,7 @@ router.use(usuarioTipoRoutes);
 router.use(reclamosTipoRoutes);
 router.use(reclamosEstadoRoutes);
 router.use(usuariosOficinasRoutes);
+router.use(reclamos);
 export default router; 
 
 
