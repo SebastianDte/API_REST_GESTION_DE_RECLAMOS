@@ -125,6 +125,11 @@ class UsuariosDB {
     async reactivarUsuario(idUsuario){
         await conexion.query('UPDATE usuarios SET activo = 1 WHERE idUsuario = ?', [idUsuario]);
     };
+
+    async obtenerUsuarioPorEmail(correoElectronico){
+        const [rows] = await conexion.query('SELECT * FROM usuarios WHERE correoElectronico = ?', [correoElectronico]);
+        return rows[0]; // Devuelve el primer usuario encontrado
+    };
 }
 
 export default UsuariosDB;

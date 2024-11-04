@@ -1,10 +1,17 @@
 import express from 'express';
+import passport from '../../middlewares/passport.js'; // Asegúrate de importar Passport
 import reclamosController from '../../controllers/reclamosController.js';
+
 
 const router = express.Router();
 
-// crear un reclamo.
-router.get('/reclamos', reclamosController.obtenerReclamos); 
+
+router.get(
+    '/reclamos',
+    passport.authenticate('jwt', { session: false }), // Sigue igual
+    passport.authorize('Administrador', 'OtroTipo'), // Cambia aquí a las cadenas de tipo de usuario
+    reclamosController.obtenerReclamos
+);
 
 // obtener todos los reclamos
 router.post('/reclamos', reclamosController.crearReclamo);
