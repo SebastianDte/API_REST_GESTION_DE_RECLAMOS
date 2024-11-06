@@ -23,10 +23,10 @@ router.get('/reclamos/:id', reclamosController.obtenerReclamo);
 router.patch('/reclamos/:id', reclamosController.actualizarReclamo);
 
 // eliminar un reclamo | BAJA LÓGICA.
-router.patch('/reclamos/baja:id', reclamosController.eliminarReclamo);
+router.patch('/reclamos/:id/baja', reclamosController.eliminarReclamo);
 
 // reactivar un reclamo
-// router.patch('/reclamos/reactivar/:idReclamo', reclamosController.reactivarReclamo);
+// router.patch('/reclamos/:idReclamo/alta', reclamosController.reactivarReclamo);
 
 
 

@@ -5,8 +5,10 @@ import bcrypt from 'bcrypt';
 const usuariosDB = new UsuariosDB();
 
 class UsuariosService {
+
+
     async crearUsuario(usuarioData) {
-        const { correoElectronico } = usuarioData;
+        const { correoElectronico, contrasenia } = usuarioData;
 
         // Validar si el correo electrónico ya está en uso
         const existeCorreo = await validarCorreoExistente(correoElectronico);
@@ -30,7 +32,7 @@ class UsuariosService {
     }
 
     async obtenerUsuarioPorId(id) {
-        const usuario = await usuariosDB.obtenerUsuarioPorId(id);
+        const usuario = await usuariosDB.getUsuarioPorId(id);
         return usuario;
     };
 
@@ -45,44 +47,40 @@ class UsuariosService {
         const updates = [];
         const values = [];
 
-        if (datos.nombre || datos.nombre === '') {
+        // Actualizar solo los campos permitidos
+        if (datos.nombre) {
             updates.push('nombre = ?');
-            values.push(datos.nombre || usuarioExistente.nombre);
+            values.push(datos.nombre);
         }
-        if (datos.apellido || datos.apellido === '') {
+        if (datos.apellido) {
             updates.push('apellido = ?');
-            values.push(datos.apellido || usuarioExistente.apellido);
+            values.push(datos.apellido);
         }
-        if (datos.correoElectronico || datos.correoElectronico === '') {
+        if (datos.correoElectronico) {
             updates.push('correoElectronico = ?');
-            values.push(datos.correoElectronico || usuarioExistente.correoElectronico);
+            values.push(datos.correoElectronico);
         }
-        if (datos.contrasenia || datos.contrasenia === '') {
-            updates.push('contrasenia = ?');
-            values.push(datos.contrasenia || usuarioExistente.contrasenia);
-        }
-        if (datos.idTipoUsuario || datos.idTipoUsuario === 0) {
-            updates.push('idTipoUsuario = ?');
-            values.push(datos.idTipoUsuario || usuarioExistente.idTipoUsuario);
-        }
-        if (datos.imagen || datos.imagen === '') {
+        if (datos.imagen) {
             updates.push('imagen = ?');
-            values.push(datos.imagen || usuarioExistente.imagen);
+            values.push(datos.imagen);
         }
 
         if (updates.length === 0) {
-            throw new Error('No se proporcionaron campos para actualizar.');
+            throw new Error('No se proporcionaron campos válidos para actualizar.');
         }
 
         return await usuariosDB.actualizarUsuario(idUsuario, updates, values);
     };
 
     async eliminarUsuario(idUsuario) {
+
         const usuario = await existeUsuario(idUsuario);
         if (!usuario) {
             throw new Error('Usuario no encontrado');
         }
-
+        if (usuario.idTipoUsuario !== 2) {
+            throw new Error('No tienes permiso para dar de baja a este usuario');
+        }
         if (usuario.activo === 0) {
             throw new Error('El usuario ya ha sido dado de baja');
         }
@@ -95,6 +93,9 @@ class UsuariosService {
         const usuario = await existeUsuario(idUsuario);
         if (!usuario) {
             throw new Error('Usuario no encontrado');
+        }
+        if (usuario.idTipoUsuario !== 2) {
+            throw new Error('No tienes permiso para dar de alta a este usuario');
         }
 
         if (usuario.activo === 1) {

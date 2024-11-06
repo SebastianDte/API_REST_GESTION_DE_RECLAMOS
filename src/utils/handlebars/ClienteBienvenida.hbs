@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Nuestro Servicio</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+        }
+        .button-container {
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Bienvenido, {{nombre}}!</h1>
+        <p>Estamos emocionados de tenerte con nosotros. A partir de ahora, tendrás acceso a todas nuestras funcionalidades y servicios. ¡Esperamos que disfrutes de nuestra plataforma!</p>
+        <p>Si tenés alguna duda o necesitas ayuda, no dudes en ponerte en contacto con nuestro equipo de soporte.</p>
+        
+        <!-- Contenedor para centrar el botón -->
+        <div class="button-container">
+            <a href="https://url.com" class="button">Ir a tu cuenta</a>
+        </div>
+
+        <div class="footer">
+            <p>&copy; {{year}} Reclamos Empresa. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>

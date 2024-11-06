@@ -1,20 +1,51 @@
 // src/routes/usuarioRoutes.js
 import express from 'express'; // Importar Express
-import usuariosController from '../../controllers/usuariosController.js'; // Importar el controlador de usuarios
+import usuariosController from '../../controllers/usuariosController.js'; 
+import passport from '../../middlewares/passport.js'; 
+import { verificarPropietario } from '../../middlewares/verificarPropietario.js'
+
 
 const router = express.Router(); 
 
 // Ruta para crear un usuario.
 router.post('/usuarios', usuariosController.createUsuario); 
-//obtener todos los usuarios
-router.get('/usuarios', usuariosController.getUsuarios);
-// Ruta para obtener un usuario por ID
-router.get('/usuarios/:id',usuariosController.getUsuarioPorId);
+
 // // Ruta para actualizar un usuario
-router.patch('/usuarios/:idUsuario', usuariosController.updateUsuario);
-// // Ruta para eliminar un usuario | BAJA LÓGICA.
-router.patch('/usuarios/baja/:idUsuario', usuariosController.deleteUsuario);
-// // Ruta para reactivar un usuario
-router.patch('/usuarios/alta/:idUsuario', usuariosController.reactivarUsuario);
+router.patch(
+    '/usuarios/:idUsuario',
+    passport.authenticate('jwt', { session: false }), 
+    verificarPropietario, 
+    usuariosController.updateUsuario 
+);
+
+// (solo Administrador)
+router.get(
+    '/usuarios', 
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    usuariosController.getUsuarios 
+  );
+
+  router.get(
+    '/usuarios/:id',
+    passport.authenticate('jwt', { session: false }), // Autenticación con JWT
+    passport.authorize(1), // Solo administradores pueden acceder
+    usuariosController.getUsuarioPorId // Controlador para obtener el usuario
+  );
+// Ruta para reactivar un usuario (solo Administrador)
+router.patch(
+    '/usuarios/baja/:idUsuario',
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    usuariosController.deleteUsuario 
+);
+
+// Ruta para reactivar un usuario (solo Administrador)
+router.patch(
+    '/usuarios/alta/:idUsuario',
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    usuariosController.reactivarUsuario 
+);
 
 export default router; 
