@@ -10,6 +10,7 @@ class OficinasDB {
         idReclamoTipo
         FROM 
         oficinas
+       
         
     `;
     const filters = [];
@@ -47,14 +48,14 @@ class OficinasDB {
   }
 
   async obtenerOficinaPorId(id) {
-    return await conexion.execute('SELECT * FROM oficinas WHERE idOficina = ?', [id]);
+    return await conexion.execute('SELECT * FROM oficinas WHERE idOficina = ? AND activo = 1', [id]);
   }
 
   async updateOficinaDB(id, cambios) {
     const setClause = Object.keys(cambios).map(key => `${key} = ?`).join(', ');
     const values = Object.values(cambios);
     if (values.length === 0) {
-        throw { status: 400, message: 'No se proporcionaron cambios para actualizar.' };
+      throw { status: 400, message: 'No se proporcionaron cambios para actualizar.' };
     }
 
     return await conexion.execute(`UPDATE oficinas SET ${setClause} WHERE idOficina = ?`, [...values, id]);

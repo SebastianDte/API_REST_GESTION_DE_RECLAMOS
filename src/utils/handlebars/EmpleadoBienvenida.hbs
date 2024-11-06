@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a la Empresa</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9eff1;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #555;
+        }
+        .highlight {
+            color: #2980b9;
+            font-weight: bold;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-top: 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 12px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Bienvenido a la empresa, {{nombre}}!</h1>
+        <p>Nos complace enormemente tenerte como parte de nuestro equipo. Como empleado, serás fundamental en nuestro éxito y estamos emocionados de trabajar juntos para lograr grandes cosas.</p>
+        <p>Tu cuenta ha sido creada exitosamente, y puedes comenzar a acceder a nuestros sistemas. A continuación, te proporcionamos tus credenciales de acceso:</p>
+        <p><span class="highlight">Correo electrónico:</span> {{correoElectronico}}</p>
+        <p><span class="highlight">Contraseña temporal:</span> empleado_2024</p>
+        <p>Recordá cambiar tu contraseña al iniciar sesión por motivos de seguridad.</p>
+        <p>Si tenés alguna duda o necesitas asistencia, no dudes en ponerte en contacto con el equipo de soporte.</p>
+        <a href="https://sebastiandte.netlify.app/" class="cta-button">Acceder a tu cuenta</a>
+        <footer>
+            <p>&copy; {{year}} Reclamos Empresa. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+</body>
+</html>

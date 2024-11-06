@@ -116,8 +116,8 @@ class UsuariosOficinasService {
         return resultado; // Retornamos el resultado de la DB
     }
 
-    async obtenerRelacionPorId(idOficina) {
-        const relacion = await UsuariosOficinasDB.obtenerRelacionPorId(idOficina);
+    async obtenerRelacionPorId(idUsuarioOficina) {
+        const relacion = await UsuariosOficinasDB.obtenerRelacionPorId(idUsuarioOficina);
         if (!relacion) {
             throw new Error("Error: la relación no existe o está inactiva.");
         }
