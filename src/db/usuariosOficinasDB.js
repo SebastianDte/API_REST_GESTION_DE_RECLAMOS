@@ -33,17 +33,19 @@ class UsuariosOficinasDB {
         return rows.length > 0 ? rows[0].descripcion : null;
     }
 
-    async listarRelaciones(idUsuario = null, idOficina = null) {
+    async listarRelaciones(idOficina = null, idTipoUsuario = null) {
         let query = `
             SELECT 
-                uo.idUsuarioOficina,
-                uo.idUsuario, 
-                u.nombre AS nombreUsuario, 
-                u.apellido AS apellidoUsuario, 
-                uo.idOficina, 
-                o.nombre AS nombreOficina 
+                u.idUsuario, 
+                u.nombre, 
+                u.apellido, 
+                u.correoElectronico, 
+                u.idtipoUsuario, 
+                u.imagen, 
+                u.activo, 
+                o.nombre AS nombreOficina
             FROM 
-                usuariosoficinas uo 
+                usuariosoficinas uo
             JOIN 
                 usuarios u ON uo.idUsuario = u.idUsuario
             JOIN 
@@ -51,23 +53,25 @@ class UsuariosOficinasDB {
             WHERE 
                 uo.activo = 1
         `;
-    
+        
         const params = [];
-    
-        // Agregar condiciones para los filtros según si se proporcionan valores
-        if (idUsuario) {
-            query += ' AND uo.idUsuario = ?';
-            params.push(idUsuario);
-        }
+        
         if (idOficina) {
-            query += ' AND uo.idOficina = ?';
+            query += ' AND o.idOficina = ?';
             params.push(idOficina);
         }
     
+        
+        if (idTipoUsuario) {
+            query += ' AND u.idtipoUsuario = ?';
+            params.push(idTipoUsuario);
+        }
+    
+      
         const [rows] = await conexion.query(query, params);
         return rows;
     }
-
+    
     async obtenerRelacionPorId(idUsuarioOficina) {
         const [rows] = await conexion.query(`
             SELECT 

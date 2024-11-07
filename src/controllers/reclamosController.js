@@ -1,32 +1,46 @@
 // reclamosControlador.js
 import ReclamosServicio from '../services/reclamosService.js';
-import {validarCamposPermitidosUpdate} from '../utils/validacionesReclamos.js'
+import { validarCamposPermitidosUpdate } from '../utils/validacionesReclamos.js'
+import jwt from 'jsonwebtoken';
 
-const obtenerReclamos=async(req, res)=> {
+const obtenerReclamos = async (req, res) => {
     try {
-        // Obtener filtros de los parámetros de la consulta (query params)
-        const filtros = {
-            idReclamoEstado: req.query.idReclamoEstado,
-            idReclamoTipo: req.query.idReclamoTipo,
-            fechaCreacionInicio: req.query.fechaCreacionInicio,
-            fechaCreacionFin: req.query.fechaCreacionFin,
-            fechaFinalizacionInicio: req.query.fechaFinalizacionInicio,
-            fechaFinalizacionFin: req.query.fechaFinalizacionFin,
-            palabraClave: req.query.palabraClave,
-            page: req.query.page ? parseInt(req.query.page, 10) : 1, // Página por defecto 1
-            limit: req.query.limit ? parseInt(req.query.limit, 10) : 10 // Límite por defecto 10
-        };
 
-        // Obtener reclamos filtrados
-        const reclamos = await ReclamosServicio.obtenerTodosLosReclamos(filtros);
+        const token = req.cookies.token;
+        let rol = null;
+        let idUsuario = null;
 
-        // Devolver respuesta exitosa con los reclamos
-        res.status(200).json(reclamos);
+       
+        if (token) {
+            const decodedToken = jwt.verify(token, process.env.JWT_SECRET); 
+            rol = decodedToken.idTipoUsuario;
+            idUsuario = decodedToken.id;
+            console.log('Rol del token:', rol,'idUsuario: ',idUsuario);
+        }
+
+        // Solo agregar el filtro por idUsuarioCreador si el rol es Cliente (rol 3)
+        if (rol === 3) {  // Si es Cliente
+            console.log("Cliente identificado, agregando filtro por idUsuarioCreador:", idUsuario);
+            // Llamar al servicio para obtener los reclamos solo de este usuario
+            const reclamos = await ReclamosServicio.obtenerReclamos(idUsuario);
+            const reclamosFiltrados = reclamos.map(reclamo => {
+                // Eliminar las fechas que son NULL
+                if (!reclamo.fechaCancelado) delete reclamo.fechaCancelado;
+                if (!reclamo.fechaFinalizado) delete reclamo.fechaFinalizado;
+    
+                return reclamo;
+            });
+            return res.status(200).json(reclamosFiltrados);
+        }
+
+        return res.status(400).json({ mensaje: "Rol no autorizado para acceder a los reclamos" });
     } catch (error) {
-        console.error('Error al obtener reclamos:', error);
-        res.status(500).json({ mensaje: 'Error al obtener reclamos' });
+        console.error("Error al obtener los reclamos:", error);
+        res.status(500).json({ mensaje: "Error al obtener los reclamos" });
     }
-}
+};
+
+
 
 const obtenerReclamo = async (req, res) => {
     try {
@@ -42,7 +56,7 @@ const obtenerReclamo = async (req, res) => {
     }
 }
 
-const crearReclamo = async(req, res) =>{
+const crearReclamo = async (req, res) => {
     try {
         const reclamo = req.body;
 
@@ -54,7 +68,7 @@ const crearReclamo = async(req, res) =>{
     }
 }
 
-const actualizarReclamo=async(req, res) =>{
+const actualizarReclamo = async (req, res) => {
     try {
         const id = req.params.id;
         const reclamoActualizado = req.body;
@@ -63,7 +77,7 @@ const actualizarReclamo=async(req, res) =>{
         if (Object.keys(reclamoActualizado).length === 0) {
             throw new Error("Debe proporcionar al menos un campo para actualizar.");
         }
- 
+
         // Validar campos permitidos antes de llamar al servicio
         validarCamposPermitidosUpdate(reclamoActualizado);
 
@@ -95,10 +109,15 @@ const eliminarReclamo = async (req, res) => {
     }
 }
 
+const reactivarReclamo = async (req, res) => {
+
+}
+
 export default {
     obtenerReclamos,
     obtenerReclamo,
     crearReclamo,
     actualizarReclamo,
     eliminarReclamo,
+    reactivarReclamo
 };

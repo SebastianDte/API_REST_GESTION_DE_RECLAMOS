@@ -48,10 +48,9 @@ class UsuariosOficinasService {
         return await UsuariosOficinasDB.crearRelacion(idUsuario, idOficina);
     }
 
-    async listarRelaciones(idUsuario = null, idOficina = null) {
-        return await UsuariosOficinasDB.listarRelaciones(idUsuario, idOficina);
+    async listarRelaciones(idOficina = null, idTipoUsuario = null) {
+        return await UsuariosOficinasDB.listarRelaciones(idOficina, idTipoUsuario);
     }
-
     async actualizarRelacion(idUsuarioOficina, body) {
        
         if (!idUsuarioOficina) {

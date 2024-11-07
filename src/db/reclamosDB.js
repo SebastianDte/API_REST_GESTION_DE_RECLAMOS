@@ -2,6 +2,32 @@
 import { conexion } from './conexion.js';
 
 class ReclamosDB {
+
+    async obtenerReclamosPorUsuario(idUsuario) {
+        try {
+            // Consulta SQL para obtener los reclamos creados por este usuario
+            const query = `
+                SELECT 
+                    asunto,
+                    descripcion,
+                    fechaCreado,
+                     fechaCancelado,
+                        fechaFinalizado,
+                    (SELECT descripcion FROM ReclamosEstado WHERE idReclamoEstado = Reclamos.idReclamoEstado) AS estadoDescripcion,
+                    (SELECT descripcion FROM ReclamosTipo WHERE idReclamoTipo = Reclamos.idReclamoTipo) AS tipoDescripcion
+                FROM Reclamos
+                WHERE idUsuarioCreador = ?;
+                ;
+            `;
+            const [rows] = await conexion.query(query, [idUsuario]);
+            return rows;
+            //return result;  // Devolvemos los reclamos encontrados
+        } catch (error) {
+            console.error('Error al obtener reclamos en DB:', error);
+            throw new Error('Error al obtener reclamos en DB');
+        }
+    }
+
     async obtenerTodosLosReclamos(filtros) {
         // Comienza con la consulta base
         let query = `
@@ -86,18 +112,18 @@ class ReclamosDB {
                 usuarios uf ON r.idUsuarioFinalizador = uf.idUsuario
             WHERE 
                 r.idReclamo = ?`;
-        
+
         const [result] = await conexion.query(query, [idReclamo]);
         return result[0];
     }
-    
 
-    async crearReclamo (reclamo){
+
+    async crearReclamo(reclamo) {
         const query = `
             INSERT INTO reclamos (asunto, descripcion, fechaCreado, idReclamoEstado, idReclamoTipo, idUsuarioCreador)
             VALUES (?, ?, NOW(), ?, ?, ?)
         `;
-        
+
         const { asunto, descripcion, idReclamoEstado, idReclamoTipo, idUsuarioCreador } = reclamo;
         const [result] = await conexion.query(query, [asunto, descripcion, idReclamoEstado, idReclamoTipo, idUsuarioCreador]);
         return result.insertId;
@@ -108,13 +134,13 @@ class ReclamosDB {
         const [result] = await conexion.query(query, [idReclamoEstado]);
         return result[0].count > 0; // Retorna true si existe
     }
-    
+
     async validarTipoExiste(idReclamoTipo) {
         const query = `SELECT COUNT(*) as count FROM reclamosTipo WHERE idReclamoTipo = ?`;
         const [result] = await conexion.query(query, [idReclamoTipo]);
         return result[0].count > 0; // Retorna true si existe
     }
-    
+
     async validarUsuarioExiste(idUsuarioCreador) {
         const query = `SELECT COUNT(*) as count FROM usuarios WHERE idUsuario = ?`;
         const [result] = await conexion.query(query, [idUsuarioCreador]);
@@ -122,29 +148,29 @@ class ReclamosDB {
     }
 
 
-   async actualizarReclamo(idReclamo, datosActualizados) {
-    const camposPermitidos = ['asunto', 'descripcion', 'idReclamoEstado', 'idReclamoTipo', 'fechaCancelado', 'fechaFinalizado'];
-    const camposParaActualizar = Object.keys(datosActualizados).filter(campo => camposPermitidos.includes(campo));
+    async actualizarReclamo(idReclamo, datosActualizados) {
+        const camposPermitidos = ['asunto', 'descripcion', 'idReclamoEstado', 'idReclamoTipo', 'fechaCancelado', 'fechaFinalizado'];
+        const camposParaActualizar = Object.keys(datosActualizados).filter(campo => camposPermitidos.includes(campo));
 
-    if (camposParaActualizar.length === 0) {
-        throw new Error("No se enviaron campos válidos para actualizar.");
-    }
+        if (camposParaActualizar.length === 0) {
+            throw new Error("No se enviaron campos válidos para actualizar.");
+        }
 
-    const setClause = camposParaActualizar.map(campo => `${campo} = ?`).join(', ');
-    const valores = camposParaActualizar.map(campo => datosActualizados[campo]);
+        const setClause = camposParaActualizar.map(campo => `${campo} = ?`).join(', ');
+        const valores = camposParaActualizar.map(campo => datosActualizados[campo]);
 
-    const query = `
+        const query = `
         UPDATE reclamos
         SET ${setClause}
         WHERE idReclamo = ?
     `;
 
-    // Añadimos el ID del reclamo al final de los valores
-    valores.push(idReclamo);
+        // Añadimos el ID del reclamo al final de los valores
+        valores.push(idReclamo);
 
-    const [result] = await conexion.query(query, valores);
-    return result.affectedRows;
-}
+        const [result] = await conexion.query(query, valores);
+        return result.affectedRows;
+    }
 
     async eliminarReclamo(idReclamo) {
         const query = 'DELETE FROM reclamos WHERE idReclamo = ?';

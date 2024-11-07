@@ -1,29 +1,18 @@
 // reclamosServicio.js
 import ReclamosDB from '../db/reclamosDB.js';
-import { validarCamposObligatorios, validarCamposPermitidos, validarExistenciaIds, validarCamposObligatoriosActualizar, validarExistenciaIdsActualizar, validarCamposPermitidosUpdate,validarFormatoFecha } from '../utils/validacionesReclamos.js'
+import { validarCamposObligatorios, validarCamposPermitidos, validarExistenciaIds, validarCamposObligatoriosActualizar, validarExistenciaIdsActualizar, validarCamposPermitidosUpdate, validarFormatoFecha } from '../utils/validacionesReclamos.js'
 
 
 class ReclamosServicio {
-    async obtenerTodosLosReclamos(filtros) {
-        const reclamos = await ReclamosDB.obtenerTodosLosReclamos(filtros);
+    async obtenerReclamos(idUsuario) {
+        try {
+            const reclamos = await ReclamosDB.obtenerReclamosPorUsuario(idUsuario);
+            return reclamos;
+        } catch (error) {
+            console.error("Error en el servicio de reclamos:", error);
+            throw new Error("Error al obtener los reclamos");
+        }
 
-        // Transformar el resultado para devolver solo lo necesario
-        const reclamosConDescripciones = reclamos.map(reclamo => ({
-            idReclamo: reclamo.idReclamo,
-            asunto: reclamo.asunto,
-            descripcion: reclamo.descripcion,
-            fechaCreado: reclamo.fechaCreado,
-            fechaFinalizado: reclamo.fechaFinalizado,
-            fechaCancelado: reclamo.fechaCancelado,
-            estado: reclamo.estado,
-            tipo: reclamo.tipo,
-            nombreCreador: reclamo.nombreCreador,
-            apellidoCreador: reclamo.apellidoCreador,
-            nombreFinalizador: reclamo.nombreFinalizador,
-            apellidoFinalizador: reclamo.apellidoFinalizador
-        }));
-
-        return reclamosConDescripciones;
     }
 
     async obtenerReclamo(id) {

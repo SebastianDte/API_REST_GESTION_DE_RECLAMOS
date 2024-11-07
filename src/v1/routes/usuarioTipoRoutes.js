@@ -1,14 +1,43 @@
+import express from 'express';
 import usuariosTipoController from '../../controllers/usuariosTipoController.js';
-import express from 'express'; 
-const router = express.Router(); 
+import passport from '../../middlewares/passport.js';
 
+const router = express.Router();
 
+// Solo un administrador puede acceder a estas rutas
+router.post(
+    '/usuariosTipo',
+    passport.authenticate('jwt', { session: false }),
+    passport.authorize(1),
+    usuariosTipoController.createUsuarioTipo
+);
 
+router.get(
+    '/usuariosTipo',
+    passport.authenticate('jwt', { session: false }),
+    passport.authorize(1),
+    usuariosTipoController.getAllUsuariosTipo
+);
 
-router.post('/usuariosTipo', usuariosTipoController.createUsuarioTipo);
-router.get('/usuariosTipo', usuariosTipoController.getAllUsuariosTipo);
-router.patch('/usuariosTipo/:id', usuariosTipoController.updateUsuarioTipo);
-router.patch('/usuariosTipo/baja/:id', usuariosTipoController.deleteUsuarioTipo);
-router.patch('/usuariosTipo/alta/:id', usuariosTipoController.altaUsuarioTipo);
+router.patch(
+    '/usuariosTipo/:id',
+    passport.authenticate('jwt', { session: false }),
+    passport.authorize(1),
+    usuariosTipoController.updateUsuarioTipo
+);
+
+router.patch(
+    '/usuariosTipo/baja/:id',
+    passport.authenticate('jwt', { session: false }),
+    passport.authorize(1),
+    usuariosTipoController.deleteUsuarioTipo
+);
+
+router.patch(
+    '/usuariosTipo/alta/:id',
+    passport.authenticate('jwt', { session: false }),
+    passport.authorize(1),
+    usuariosTipoController.altaUsuarioTipo
+);
 
 export default router;

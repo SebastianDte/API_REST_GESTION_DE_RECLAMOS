@@ -13,13 +13,15 @@ const createUsuarioOficina = async (req, res) => {
 };
 
 const getAllUsuariosOficina = async (req, res) => {
-    const { idUsuario, idOficina } = req.query;
+    const { idOficina, idTipoUsuario } = req.query; 
+
     try {
-        const usuariosOficinas = await usuariosOficinasService.listarRelaciones(idUsuario || null, idOficina || null);
-        res.status(200).json(usuariosOficinas);
+        const usuariosOficinas = await usuariosOficinasService.listarRelaciones(idOficina, idTipoUsuario);
+
+        res.status(200).json(usuariosOficinas); 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ mensaje: error.message }); 
     }
 };
 

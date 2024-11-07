@@ -4,15 +4,16 @@ class OficinasDB {
   async obtenerOficinas({ activo, nombre, page, pageSize }) {
     let query = `
         SELECT 
-        idOficina, 
-        nombre, 
-        activo, 
-        idReclamoTipo
+            oficinas.idOficina, 
+            oficinas.nombre, 
+            oficinas.activo, 
+            IFNULL(reclamosTipo.descripcion, 'No especificado') AS tipoReclamo
         FROM 
-        oficinas
-       
-        
+            oficinas 
+        LEFT JOIN 
+            reclamosTipo ON oficinas.idReclamoTipo = reclamosTipo.idReclamoTipo
     `;
+
     const filters = [];
     const values = [];
 
@@ -35,11 +36,10 @@ class OficinasDB {
     const pageLimit = parseInt(pageSize, 10) || 10;
     const offset = (pageNum - 1) * pageLimit;
 
-    // Cambiar el orden de los parámetros en LIMIT y OFFSET
     query += ` LIMIT ?, ?`;
-    values.push(offset, pageLimit); // Agregar valores para paginación
+    values.push(offset, pageLimit);
 
-    const [rows] = await conexion.query(query, [...values]); // Usar parámetros
+    const [rows] = await conexion.query(query, values);
     return rows;
   }
 

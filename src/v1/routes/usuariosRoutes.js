@@ -1,5 +1,5 @@
 // src/routes/usuarioRoutes.js
-import express from 'express'; // Importar Express
+import express from 'express'; 
 import usuariosController from '../../controllers/usuariosController.js'; 
 import passport from '../../middlewares/passport.js'; 
 import { verificarPropietario } from '../../middlewares/verificarPropietario.js'
@@ -28,10 +28,12 @@ router.get(
 
   router.get(
     '/usuarios/:id',
-    passport.authenticate('jwt', { session: false }), // Autenticación con JWT
-    passport.authorize(1), // Solo administradores pueden acceder
-    usuariosController.getUsuarioPorId // Controlador para obtener el usuario
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    usuariosController.getUsuarioPorId 
   );
+
+
 // Ruta para reactivar un usuario (solo Administrador)
 router.patch(
     '/usuarios/baja/:idUsuario',
