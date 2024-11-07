@@ -32,7 +32,11 @@ export const sendEmail = async (correoDestino, datos, tipo) => {
         else if (tipo === 'olvidoPassword') {
             // Plantilla para olvido de contraseña
             plantilla = fs.readFileSync(path.join(dir, '/../utils/handlebars/OlvidoPassword.hbs'), 'utf-8');
-        } else {
+        } else if (tipo === 'cambioEstadoReclamo') {
+           
+            plantilla = fs.readFileSync(path.join(dir, '../utils/handlebars/CambioEstadoReclamo.hbs'), 'utf-8');
+        }
+        else {
             throw new Error('Tipo de correo no reconocido');
         }
     } catch (error) {
@@ -56,7 +60,11 @@ export const sendEmail = async (correoDestino, datos, tipo) => {
         asunto = `¡Bienvenido como cliente, ${datos.nombre}!`;
     } else if (tipo === 'bienvenidaEmpleado') {
         asunto = `¡Bienvenido a la empresa, ${datos.nombre}!`;
-    } else {
+    }else if (tipo === 'cambioEstadoReclamo') {
+        
+        asunto = `El estado de tu reclamo ha cambiado`;
+    }
+     else {
         asunto = "Recuperación de contraseña";
     }
 

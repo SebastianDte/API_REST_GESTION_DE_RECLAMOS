@@ -8,6 +8,49 @@ export const validarFormatoFecha = (fecha) => {
     }
 };
 
+export const validarCamposObligatoriosCrear = (reclamo) => {
+    const { asunto, descripcion, idReclamoTipo,  } = reclamo;
+
+    if (!asunto || asunto.trim() === "") {
+        throw new Error("El asunto es requerido y no puede estar vacío.");
+    }
+    if (descripcion === undefined) {
+        throw new Error("La descripción es requerida.");
+    }
+   
+    if (!idReclamoTipo) {
+        throw new Error("El idReclamoTipo es requerido.");
+    }
+ 
+};
+export const validarCamposPermitidosCrear = (body) => {
+    const allowedFields = ['asunto', 'descripcion', 'idReclamoTipo'];
+    const receivedFields = Object.keys(body);
+
+    const invalidFields = receivedFields.filter(field => !allowedFields.includes(field));
+
+    if (invalidFields.length > 0) {
+        throw new Error(`Los siguientes campos no están permitidos: ${invalidFields.join(', ')}`);
+    }
+};
+export const validarExistenciaIdsCrear = async (reclamo) => {
+    const { idReclamoTipo} = reclamo;
+
+    const tipoExiste = await ReclamosDB.validarTipoExiste(idReclamoTipo);
+    if (!tipoExiste) {
+        throw new Error(`El idReclamoTipo ${idReclamoTipo} no existe.`);
+    }
+  
+};
+
+
+
+
+
+
+
+
+
 export const validarCamposObligatorios = (reclamo) => {
     const { asunto, descripcion, idReclamoEstado, idReclamoTipo, idUsuarioCreador } = reclamo;
 
@@ -118,5 +161,15 @@ export const validarCamposObligatoriosActualizar = (reclamo) => {
     }
 };
 
+export const validarCamposPermitidosUpdateCliente = (body) => {
+    const allowedFields = ['idReclamoEstado']; 
+    const receivedFields = Object.keys(body);
+
+    const invalidFields = receivedFields.filter(field => !allowedFields.includes(field));
+
+    if (invalidFields.length > 0) {
+        throw new Error(`Los siguientes campos no están permitidos: ${invalidFields.join(', ')}`);
+    }
+};
 
 

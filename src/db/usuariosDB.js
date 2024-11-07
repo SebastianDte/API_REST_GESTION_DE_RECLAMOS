@@ -152,7 +152,29 @@ class UsuariosDB {
         const [rows] = await conexion.query(query, [id]);
         return rows;
     }
-    
+    // Método para obtener un usuario por su ID
+async obtenerUsuarioPorId(idUsuario) {
+    try {
+        // Realizamos la consulta para obtener el usuario por su ID
+        const query = 'SELECT correoElectronico, nombre FROM usuarios WHERE idUsuario = ?';
+        
+        // Ejecutamos la consulta
+        const [resultado] = await db.execute(query, [idUsuario]);
+        
+        // Verificamos si encontramos el usuario
+        if (resultado.length === 0) {
+            throw new Error('Usuario no encontrado');
+        }
+        
+        // Devolvemos el primer (y único) resultado
+        return resultado[0];
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error.message);
+        throw new Error('Error al obtener el usuario');
+    }
+}
+
+
     
 
 }

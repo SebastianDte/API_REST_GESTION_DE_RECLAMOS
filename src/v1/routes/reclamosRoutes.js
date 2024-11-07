@@ -8,20 +8,32 @@ const router = express.Router();
 
 router.get(
     '/reclamos',
-    passport.authenticate('jwt', { session: false }),  // Middleware de autenticación
-    passport.authorize(1, 2, 3), // Middleware de autorización por rol
-    reclamosController.obtenerReclamos  // Controlador para obtener los reclamos
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1, 2, 3), 
+    reclamosController.obtenerReclamos  
 );
 
+router.post(
+    '/reclamos',
+    passport.authenticate('jwt', { session: false }),  // Verificar autenticación JWT
+    passport.authorize(3),  // Solo clientes pueden crear reclamos
+    reclamosController.crearReclamo  // Llamar al controlador de creación de reclamo
+  );
 
-router.post('/reclamos', reclamosController.crearReclamo);
 
-// obtener un reclamo por ID
-router.get('/reclamos/:id', reclamosController.obtenerReclamo);
+router.get(
+    '/reclamos/:id', 
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1, 2, 3), 
+    reclamosController.obtenerReclamo);
 
 // actualizar un reclamo
-router.patch('/reclamos/:id', reclamosController.actualizarReclamo);
-
+router.patch(
+    '/reclamos/:id',
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1, 2, 3), 
+    reclamosController.actualizarReclamo 
+  );
 
 router.patch(
     '/reclamos/:id/baja', 
