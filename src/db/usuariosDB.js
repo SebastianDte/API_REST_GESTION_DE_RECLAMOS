@@ -77,7 +77,7 @@ class UsuariosDB {
             values.push(idOficina);
         }
 
-        // Aplicar paginación
+        // paginación
         if (!nombre && !apellido) {
             const pageNum = parseInt(page, 10) || 1;
             const pageLimit = parseInt(pageSize, 10) || 10;
@@ -103,7 +103,7 @@ class UsuariosDB {
 
         // Ejecuta la consulta
         const [result] = await conexion.query(query, values);
-        return result; // Asegúrate de devolver el resultado correcto
+        return result; 
     }
 
     async darBajaUsuario(idUsuario) {
@@ -149,7 +149,6 @@ class UsuariosDB {
                 usuarios.idUsuario
         `;
     
-        // Ejecutar la consulta
         const [rows] = await conexion.query(query, [id]);
         return rows;
     }

@@ -17,11 +17,9 @@ const createUsuario = async (req, res) => {
     // Comprobar si hay un token en el encabezado de autorización
     const token = req.cookies.token;
     let rol = null;
-    console.log('llego hasta aca');
 
     // Si hay un token, verificarlo
     if (token) {
-      console.log('Entro al token');
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET); // Usar la clave secreta desde el .env
       rol = decodedToken.idTipoUsuario;  // Obtener el idTipoUsuario del token
       console.log('Rol del token:', rol);  // Verifica qué rol estás obteniendo

@@ -1,11 +1,42 @@
 import reclamosEstadoController from '../../controllers/reclamosEstadoController.js';
 import express from 'express'; 
-const router = express.Router(); 
+import passport from '../../middlewares/passport.js';
 
-router.post('/reclamosEstado', reclamosEstadoController.createReclamoEstado);
-router.get('/reclamosEstado', reclamosEstadoController.getAllReclamosEstado);
-router.patch('/reclamosEstado/:id', reclamosEstadoController.updateReclamoEstado);
-router.patch('/reclamosEstado/baja/:id', reclamosEstadoController.deleteReclamoEstado);
-router.patch('/reclamosEstado/alta/:id', reclamosEstadoController.activateReclamoEstado);
+const router = express.Router();
+
+router.post(
+    '/reclamosEstado', 
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    reclamosEstadoController.createReclamoEstado
+);
+
+router.get(
+    '/reclamosEstado', 
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    reclamosEstadoController.getAllReclamosEstado
+);
+
+router.patch(
+    '/reclamosEstado/:id', 
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    reclamosEstadoController.updateReclamoEstado
+);
+
+router.patch(
+    '/reclamosEstado/baja/:id', 
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    reclamosEstadoController.deleteReclamoEstado
+);
+
+router.patch(
+    '/reclamosEstado/alta/:id', 
+    passport.authenticate('jwt', { session: false }), 
+    passport.authorize(1), 
+    reclamosEstadoController.activateReclamoEstado
+);
 
 export default router;
