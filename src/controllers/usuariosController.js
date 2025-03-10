@@ -18,20 +18,20 @@ const createUsuario = async (req, res) => {
     const token = req.cookies.token;
     let rol = null;
 
-    // Si hay un token, verificarlo
+    // validamos si hay un token
     if (token) {
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET); // Usar la clave secreta desde el .env
-      rol = decodedToken.idTipoUsuario;  // Obtener el idTipoUsuario del token
-      console.log('Rol del token:', rol);  // Verifica qué rol estás obteniendo
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET); 
+      rol = decodedToken.idTipoUsuario;  
+      console.log('Rol del token:', rol);  
     }
 
-    // Si el usuario está logueado como cliente (rol 3), no debe poder crear nuevos usuarios
-    if (rol === 3) { // Cliente logueado
+    
+    if (rol === 3) { 
       return res.status(403).json({ mensaje: 'No tienes permisos para crear usuarios.' });
     }
 
-    // Si el usuario está logueado como administrador (rol 1), le asigna el rol de empleado (rol 2)
-    if (rol === 1) { // Administrador logueado
+    
+    if (rol === 1) { 
       req.body.idTipoUsuario = 2; // Asignar rol de empleado al nuevo usuario
     } else {
       // Si no está logueado o no es admin, le asgina rol de cliente (rol 3)

@@ -23,38 +23,37 @@ const opts = {
 
 // Estrategia JWT
 passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
-    console.log('Payload recibido:', jwt_payload);  // Verifica el contenido del payload recibido
+    console.log('Payload recibido:', jwt_payload);  
     try {
-        // Aquí no necesitas hacer una consulta a la base de datos,
-        // ya que el 'idTipoUsuario' y otros datos ya están en el payload del token
+        
         const usuario = {
-            id: jwt_payload.id,  // Esto es opcional, si necesitas el ID
-            idTipoUsuario: jwt_payload.idTipoUsuario  // Lo agregamos al objeto usuario
+            id: jwt_payload.id,  
+            idTipoUsuario: jwt_payload.idTipoUsuario  
         };
 
-        // Verificamos que el usuario tenga la propiedad 'idTipoUsuario'
+        
         if (usuario && usuario.idTipoUsuario) {
-            return done(null, usuario);  // Devuelves el objeto con 'idTipoUsuario' en req.user
+            return done(null, usuario);  
         }
-        return done(null, false);  // Si no está el 'idTipoUsuario', lo marcamos como falso
+        return done(null, false);  
     } catch (error) {
-        console.error('Error al obtener el usuario:', error);  // Depuración
-        return done(error, false);  // Si hay un error, lo manejamos
+        console.error('Error al obtener el usuario:', error);  
+        return done(error, false);  
     }
 }));
 
 // Middleware de autorización
 const authorize = (...allowedTypes) => {
     return (req, res, next) => {
-        const { idTipoUsuario } = req.user || {};  // Asegúrate de que req.user tenga el idTipoUsuario
-        console.log('Tipo de usuario (idTipoUsuario):', idTipoUsuario);  // Verifica que esté llegando
+        const { idTipoUsuario } = req.user || {};  
+        console.log('Tipo de usuario (idTipoUsuario):', idTipoUsuario); 
 
-        // Verifica si el tipo de usuario está incluido en los tipos permitidos
+        
         if (allowedTypes.includes(idTipoUsuario)) {
-            return next();  // El usuario tiene permiso
+            return next();  
         }
 
-        // Si no tiene permiso, devuelve un mensaje de acceso denegado
+       
         return res.status(403).json({ message: 'Acceso denegado' });
     };
 }

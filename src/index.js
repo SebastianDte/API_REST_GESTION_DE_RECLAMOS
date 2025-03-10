@@ -3,9 +3,11 @@ import passport from './middlewares/passport.js';
 import dotenv from 'dotenv';
 import v1Routes from './v1/index.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 dotenv.config();
 const app=express();        
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser()); 
 app.use(passport.initialize()); 

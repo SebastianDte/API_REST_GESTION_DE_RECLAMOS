@@ -50,14 +50,14 @@ class ReclamosServicio {
     }
 
     async crearReclamo(reclamo) {
-        // Validar que los campos sean correctos
+     
         validarCamposObligatoriosCrear(reclamo);  
-        //validarCamposPermitidosCrear(reclamo);   
         
-        // Validar que los IDs existan en las tablas correspondientes
+        
+        
         await validarExistenciaIdsCrear(reclamo); 
         
-        // Insertar el reclamo en la base de datos
+        
         return await ReclamosDB.crearReclamo(reclamo);  
     };
 
@@ -88,11 +88,11 @@ class ReclamosServicio {
             throw new Error("No se encontró el reclamo a actualizar.");
         }
 
-        // Obtener la oficina asociada al empleado
+        // ver la oficina asociada al empleado
         const oficinaEmpleado = await ReclamosDB.obtenerOficinaPorUsuario(idUsuario);
         console.log("Oficina del empleado:", oficinaEmpleado);
         console.log("Reclamo existente:", reclamoExistente);
-        // Obtener la oficina asociada al tipo de reclamo
+        // ver la oficina asociada al tipo de reclamo
         const oficinaPorReclamoTipo = await ReclamosDB.obtenerOficinaPorTipoReclamo(reclamoExistente.idReclamoTipo);
         console.log("Oficina asociada al tipo de reclamo:", oficinaPorReclamoTipo);
         console.log("Tipo de reclamo de la oficina del empleado:", oficinaEmpleado.idReclamoTipo);
@@ -123,13 +123,13 @@ class ReclamosServicio {
         if (usuarioCliente) {
             const correoCliente = usuarioCliente.correoElectronico;
             const datos = {
-                nombreCliente: usuarioCliente.nombre, // Nombre del cliente
-                estadoReclamo: nuevoEstado,           // El nuevo estado del reclamo
-                year: new Date().getFullYear()        // Año actual para el pie de página
+                nombreCliente: usuarioCliente.nombre, 
+                estadoReclamo: nuevoEstado,           
+                year: new Date().getFullYear()        
             };
         
             try {
-                // Llamar a la función sendEmail para enviar el correo
+                
                 await sendEmail(correoCliente, datos, 'cambioEstadoReclamo');
                 console.log(`Correo enviado correctamente a ${correoCliente}`);
             } catch (error) {
