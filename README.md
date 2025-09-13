@@ -58,4 +58,11 @@ Las relaciones entre estas entidades están definidas en la base de datos **MySQ
 - **Base de datos:** MySQL  
 - **Manejo de datos:** Query Builder  
 - **Autenticación y seguridad:** JWT, encriptación de contraseñas  
-- **Gestión de consultas complejas y relaciones:** Stored procedures y consultas optimizadas
+- **Gestión de consultas complejas y relaciones:** Stored procedures y consultas optimizadas  
+
+---
+
+## Documentación de la API
+
+Toda la documentación de los endpoints, ejemplos de requests y responses está disponible en Postman:  
+[Ver documentación en Postman](https://documenter.getpostman.com/view/38737734/2sAXxS6W7B)
